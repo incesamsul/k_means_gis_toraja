@@ -16,7 +16,7 @@ class KmeansController extends Controller
                 'luas_lahan' => (float) $item->luas_lahan,
                 'produksi' => (float) $item->produksi,
                 'produktivitas' => (float) $item->produktivitas,
-                'jenis_hortikultura' => $item->jenis_hortikultura,
+                'jenis_hortikultura' => $item->jenis_horikultura,
                 'persentase' => $item->persentase,
             ];
         })->toArray();
@@ -46,13 +46,13 @@ class KmeansController extends Controller
                 'produksi' => (float) $item->produksi,
                 'produktivitas' => (float) $item->produktivitas,
                 'jenis_hortikultura' => $item->jenis_hortikultura,
-                'persentase' => $item->persentase,
+            'persentase' => $item->persentase,
             ];
         })->toArray();
 
         // Run K-means
         srand(42); // Set a specific seed value
-        $k = 5; // Number of clusters
+        $k = 3; // Number of clusters
         $clusters = $this->kmeans($data, $k);
 
         // Output the results

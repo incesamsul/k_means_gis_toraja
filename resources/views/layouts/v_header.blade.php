@@ -46,6 +46,37 @@
         .text-main {
             color: #4E6EF1 !important;
         }
+
+
+        .page-item.active .page-link {
+    color: #fff !important;
+    background-color: #4E6EF1 !important;
+    border-color: #4E6EF1 !important;
+}
+
+.page-link {
+    color: #4E6EF1 !important;
+    background-color: #fff !important;
+    border: 1px solid #dee2e6 !important;
+
+}
+
+.page-link:hover {
+    color: #fff !important;
+    background-color: #4E6EF1 !important;
+    border-color: #4E6EF1 !important;
+}
+
+
+input:focus {
+    border-color: #4E6EF1 !important;
+    /* Replace with desired color */
+}
+
+select:focus {
+    border-color: #4E6EF1 !important;
+    outline: none;
+}
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -631,7 +662,7 @@
         $('.the-main-color').click();
     </script>
     <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.2/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.2/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>\
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     @yield('script')
