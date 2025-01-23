@@ -2,22 +2,7 @@
 
 @section('content')
     @if (auth()->user()->role == 'Administrator')
-        {{-- Debug information
-        <div class="row mb-3">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Debug Information:</h5>
-                        @foreach($clusters as $key => $cluster)
-                            <div>Cluster {{ $key + 1 }}:</div>
-                            @foreach($cluster as $item)
-                                <div>- Luas Lahan: {{ $item['luas_lahan'] }}</div>
-                            @endforeach
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+        
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -26,25 +11,25 @@
                         <p class="card-text">Peta ini menunjukkan 3 Cluster yang di tandai dengan masing-masing warna.</p>
                         <div class="d-flex ">
                             <div class="">
-                                @foreach ($clusters as $key => $row)
-    @php
-        // Assuming 'luas_lahan' is the primary attribute for determining high, medium, and low
-        $luasLahan = $row[0]['luas_lahan'];
+                                @foreach ($clusters as $key => $cluster)
+                                    @php
+                                        // Calculate average luas_lahan for the cluster
+                                        $avgLuasLahan = collect($cluster)->avg('luas_lahan');
 
-        // Determine the caption based on 'luas_lahan'
-        if ($luasLahan >= 700) {
-            $caption = 'High';
-        } elseif ($luasLahan >= 400) {
-            $caption = 'Medium';
-        } else {
-            $caption = 'Low';
-        }
-    @endphp
-    <div class="d-flex align-items-center mb-2">
-        <div style="width: 20px; height: 20px; background-color: #{{ $key == 1 ? 'C00000' : ($key == 2 ? '00B050' : ($key == 3 ? '0066CC' : ($key == 4 ? 'FFC000' : 'C000C5'))) }}; border-radius: 50%;"></div>
-        <p class="mb-0 ms-2">Cluster {{ $key + 1 }}  - {{ $caption }}</p>
-    </div>
-@endforeach
+                                        // Determine the caption based on average luas_lahan
+                                        if ($avgLuasLahan >= 700) {
+                                            $caption = 'High';
+                                        } elseif ($avgLuasLahan >= 400) {
+                                            $caption = 'Medium';
+                                        } else {
+                                            $caption = 'Low';
+                                        }
+                                    @endphp
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div style="width: 20px; height: 20px; background-color: #{{ $key == 1 ? 'C00000' : ($key == 2 ? '00B050' : ($key == 3 ? '0066CC' : ($key == 4 ? 'FFC000' : 'C000C5'))) }}; border-radius: 50%;"></div>
+                                        <p class="mb-0 ms-2">Cluster {{ $key + 1 }}  - {{ $caption }}</p>
+                                    </div>
+                                @endforeach
 
                             </div>
                         </div>
@@ -82,21 +67,23 @@
         let _clusterLevel = [];
 
         @foreach ($clusters as $key => $cluster)
+            @php
+                $avgLuasLahan = collect($cluster)->avg('luas_lahan');
+                if ($avgLuasLahan >= 700) {
+                    $level = 'High';
+                } elseif ($avgLuasLahan >= 400) {
+                    $level = 'Medium';
+                } else {
+                    $level = 'Low';
+                }
+            @endphp
+
             @foreach ($cluster as $data)
             console.log(@json($data))
                 _coordinates.push(@json($data['wilayah']->koordinat));
                 _clusterLabels.push('Cluster {{ $key + 1 }}'); // Example label for cluster
                 _clusterCaptions.push('{{ $data['wilayah']->nama_wilayah }} ({{ $data['wilayah']->lokasi }} ) <br> Luas Lahan : {{ $data['luas_lahan'] }} <br> Produksi : {{ $data['produksi'] }} <br> Produktivitas : {{ $data['produktivitas'] }} <br> Jenis Hortikultura : {{ $data['jenis_hortikultura'] }} <br> Persentase : {{ $data['persentase'] }}');
                 
-                @php
-                    if ($key == 2) {
-                        $level = 'High';
-                    } else if ($key == 1) {
-                        $level = 'Medium';
-                    } else {
-                        $level = 'Low';
-                    }
-                @endphp
                 _clusterLevel.push('{{ $level }}');
             @endforeach
         @endforeach

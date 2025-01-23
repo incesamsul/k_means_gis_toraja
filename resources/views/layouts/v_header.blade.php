@@ -249,7 +249,7 @@ select:focus {
                                 class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                 <svg width="12px" height="12px" viewBox="0 0 40 44" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                    <title>K-Means</title>
+                                    <title>Hasil Klasifikasi</title>
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <g transform="translate(-1870.000000, -591.000000)" fill="#FFFFFF"
                                             fill-rule="nonzero">
@@ -267,7 +267,7 @@ select:focus {
                                     </g>
                                 </svg>
                             </div>
-                            <span class="nav-link-text ms-1">K-Means</span>
+                            <span class="nav-link-text ms-1">Hasil Klasifikasi</span>
                         </a>
                     </li>
 

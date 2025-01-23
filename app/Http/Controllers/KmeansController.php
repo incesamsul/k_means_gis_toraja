@@ -24,15 +24,11 @@ class KmeansController extends Controller
         // Run K-means
         srand(42); // Set a specific seed value
         $k = 3; // Number of clusters
-        $clusters = $this->kmeans($data, $k);
-
-        // Output the results
-        // echo "Clusters:\n";
-        // print_r($clusters);
-        // die;
+        $result = $this->kmeans($data, $k);
 
         $data['tanaman'] = Tanaman::all();
-        $data['clusters'] = $clusters;
+        $data['clusters'] = $result['clusters'];
+        $data['iterations'] = $result['iterations'];
         return view('pages.kmeans.pemetaan', $data);
     }
 
@@ -46,22 +42,18 @@ class KmeansController extends Controller
                 'produksi' => (float) $item->produksi,
                 'produktivitas' => (float) $item->produktivitas,
                 'jenis_hortikultura' => $item->jenis_hortikultura,
-            'persentase' => $item->persentase,
+                'persentase' => $item->persentase,
             ];
         })->toArray();
 
         // Run K-means
         srand(42); // Set a specific seed value
         $k = 3; // Number of clusters
-        $clusters = $this->kmeans($data, $k);
-
-        // Output the results
-        // echo "Clusters:\n";
-        // print_r($clusters);
-        // die;
+        $result = $this->kmeans($data, $k);
 
         $data['tanaman'] = Tanaman::all();
-        $data['clusters'] = $clusters;
+        $data['clusters'] = $result['clusters'];
+        $data['iterations'] = $result['iterations'];
         return view('pages.kmeans.index', $data);
     }
 
@@ -123,17 +115,30 @@ class KmeansController extends Controller
     public function kmeans($data, $k, $iterations = 100)
     {
         $centroids = $this->initializeCentroids($data, $k);
+        $iterationData = [];
+        $currentCentroids = $centroids;
 
         for ($i = 0; $i < $iterations; $i++) {
-            $clusters = $this->assignClusters($data, $centroids);
+            $clusters = $this->assignClusters($data, $currentCentroids);
             $newCentroids = $this->calculateNewCentroids($clusters);
 
-            if ($centroids == $newCentroids) {
+            // Store iteration data
+            $iterationData[] = [
+                'iteration' => $i + 1,
+                'centroids' => $currentCentroids,
+                'new_centroids' => $newCentroids,
+                'clusters' => $clusters
+            ];
+
+            if ($currentCentroids == $newCentroids) {
                 break; // Convergence reached
             }
-            $centroids = $newCentroids;
+            $currentCentroids = $newCentroids;
         }
 
-        return $clusters;
+        return [
+            'clusters' => $clusters,
+            'iterations' => $iterationData
+        ];
     }
 }

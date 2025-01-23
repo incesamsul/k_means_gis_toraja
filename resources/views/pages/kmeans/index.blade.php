@@ -2,12 +2,100 @@
 
 @section('content')
     @if (auth()->user()->role == 'Administrator')
+        <!-- K-means Process Details -->
+        <div class="row mt-4">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4><strong>Proses Perhitungan K-means</strong></h4>
+
+                        @foreach ($iterations as $iteration)
+                            <div class="mb-4">
+                                <h5 class="text-primary">Iterasi {{ $iteration['iteration'] }}</h5>
+
+                                <!-- Current Centroids -->
+                                <div class="mb-3">
+                                    <h6>Centroid Awal:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Cluster</th>
+                                                    <th>Luas Lahan</th>
+                                                    <th>Produksi</th>
+                                                    <th>Produktivitas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($iteration['centroids'] as $index => $centroid)
+                                                    <tr>
+                                                        <td>C{{ $index + 1 }}</td>
+                                                        <td>{{ number_format($centroid['luas_lahan'], 2) }}</td>
+                                                        <td>{{ number_format($centroid['produksi'], 2) }}</td>
+                                                        <td>{{ number_format($centroid['produktivitas'], 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Cluster Assignment -->
+                                <div class="mb-3">
+                                    <h6>Pengelompokan Data:</h6>
+                                    @foreach ($iteration['clusters'] as $index => $cluster)
+                                        <p>Cluster {{ $index + 1 }}: {{ count($cluster) }} anggota</p>
+                                    @endforeach
+                                </div>
+
+                                <!-- New Centroids -->
+                                <div class="mb-3">
+                                    <h6>Centroid Baru:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Cluster</th>
+                                                    <th>Luas Lahan</th>
+                                                    <th>Produksi</th>
+                                                    <th>Produktivitas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($iteration['new_centroids'] as $index => $centroid)
+                                                    <tr>
+                                                        <td>C{{ $index + 1 }}</td>
+                                                        <td>{{ number_format($centroid['luas_lahan'], 2) }}</td>
+                                                        <td>{{ number_format($centroid['produksi'], 2) }}</td>
+                                                        <td>{{ number_format($centroid['produktivitas'], 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+    {{-- //hasil klasifikasi --}}
+
+    
+
+    @if (auth()->user()->role == 'Administrator')
         @foreach ($clusters as $key => $row)
             <div class="row mt-4">
                 <div class="col-sm-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h5>Hasil klasifikasi</h5>
+                        </div>
                         <div class="card-body">
-                            <p><strong>Cluster : {{ $loop->iteration }}</strong></p>
+                            <p><strong>Kelmopok : {{ $loop->iteration }}</strong></p>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
