@@ -2,6 +2,22 @@
 
 @section('content')
     @if (auth()->user()->role == 'Administrator')
+        {{-- Debug information --}}
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Debug Information:</h5>
+                        @foreach($clusters as $key => $cluster)
+                            <div>Cluster {{ $key + 1 }}:</div>
+                            @foreach($cluster as $item)
+                                <div>- Luas Lahan: {{ $item['luas_lahan'] }}</div>
+                            @endforeach
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -51,8 +67,8 @@
 @section('script')
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Create a map centered on Makassar, Indonesia
-        var map = L.map('map').setView([-5.147665, 119.432731], 13);
+        // Create a map centered on Tana Toraja, Indonesia
+        var map = L.map('map').setView([-3.0753, 119.7426], 11);
 
         // Add a tile layer to the map (OpenStreetMap in this case)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -71,58 +87,102 @@
                 _coordinates.push(@json($data['wilayah']->koordinat));
                 _clusterLabels.push('Cluster {{ $key + 1 }}'); // Example label for cluster
                 _clusterCaptions.push('{{ $data['wilayah']->nama_wilayah }} ({{ $data['wilayah']->lokasi }} ) <br> Luas Lahan : {{ $data['luas_lahan'] }} <br> Produksi : {{ $data['produksi'] }} <br> Produktivitas : {{ $data['produktivitas'] }} <br> Jenis Hortikultura : {{ $data['jenis_hortikultura'] }} <br> Persentase : {{ $data['persentase'] }}');
-                if('{{  $data['luas_lahan'] >= 700 }}') {
-                    _clusterLevel.push('High');
-                } else if('{{  $data['luas_lahan'] >= 400 }}') {
-                    _clusterLevel.push('Medium');
-                } else {
-                    _clusterLevel.push('Low');
-                }
+                
+                @php
+                    if ($key == 2) {
+                        $level = 'High';
+                    } else if ($key == 1) {
+                        $level = 'Medium';
+                    } else {
+                        $level = 'Low';
+                    }
+                @endphp
+                _clusterLevel.push('{{ $level }}');
             @endforeach
         @endforeach
 
         function parseCoordinateString(coordString) {
+            console.log('Raw coordinates:', coordString);
+            
             const cleanedString = coordString
                 .replace(/^\[|\]$/g, '')
                 .replace(/…/g, '');
-
-            return cleanedString.split('],[').map(pair => {
-                return pair.split(',').map(Number);
+                
+            console.log('Cleaned string:', cleanedString);
+            
+            const pairs = cleanedString.split('],[');
+            console.log('Coordinate pairs:', pairs);
+            
+            const result = pairs.map(pair => {
+                const coords = pair.split(',').map(Number);
+                console.log('Parsed pair:', coords);
+                return coords;
             });
+            
+            return result;
         }
 
-        const parsedData = _coordinates.map(parseCoordinateString);
-        const colors = [
-            '#C00000', // Red
-            '#00B050', // Green
-            '#0066CC', // Blue
-            '#FFC000', // Orange
-            '#C000C5', // Purple
-        ];
+        const parsedData = _coordinates.map((coords, index) => {
+            console.log(`Parsing coordinates for index ${index}`);
+            try {
+                return parseCoordinateString(coords);
+            } catch (error) {
+                console.error(`Error parsing coordinates at index ${index}:`, error);
+                return [];
+            }
+        });
 
         parsedData.forEach((polygonCoords, index) => {
-            // Swap [longitude, latitude] to [latitude, longitude]
-            const correctedPolygonCoords = polygonCoords.map(coordPair => [coordPair[1], coordPair[0]]);
-
-            let color = '#00B050';
-
-            if(_clusterLabels[index] == 'Cluster 1') {
-                color = '#C000C5';
-            } else if(_clusterLabels[index] == 'Cluster 2') {
-                color = '#C00000';
-            } else if(_clusterLabels[index] == 'Cluster 3') {
-                color = '#00B050';
-            } else {
-                color = '#FFC000';
+            if (!polygonCoords || polygonCoords.length === 0) {
+                console.warn(`Skipping invalid polygon at index ${index}`);
+                return;
             }
-            L.polygon(correctedPolygonCoords, {
+
+            // Swap [longitude, latitude] to [latitude, longitude] and validate coordinates
+            const correctedPolygonCoords = polygonCoords.map(coordPair => {
+                if (!Array.isArray(coordPair) || coordPair.length !== 2 || 
+                    !isFinite(coordPair[0]) || !isFinite(coordPair[1])) {
+                    console.error(`Invalid coordinate pair at index ${index}:`, coordPair);
+                    return null;
+                }
+                return [coordPair[1], coordPair[0]];
+            }).filter(coord => coord !== null);
+
+            if (correctedPolygonCoords.length === 0) {
+                console.warn(`No valid coordinates for polygon at index ${index}`);
+                return;
+            }
+
+            console.log('Debug -', index, ':', {
+                clusterLabel: _clusterLabels[index],
+                clusterLevel: _clusterLevel[index],
+                coordinates: correctedPolygonCoords
+            });
+
+            let color;
+            if (_clusterLevel[index] === 'High') {
+                color = '#00B050';  // Green for High
+                console.log('Setting GREEN for', index);
+            } else if (_clusterLevel[index] === 'Medium') {
+                color = '#C00000';  // Red for Medium
+                console.log('Setting RED for', index);
+            } else {
+                color = '#C000C5';  // Purple for Low
+                console.log('Setting PURPLE for', index);
+            }
+
+            try {
+                L.polygon(correctedPolygonCoords, {
                     color: color,
                     weight: 0,
                     fillColor: color,
                     fillOpacity: 0.5
                 })
-                .bindPopup(_clusterLevel[index] + '-' + _clusterLabels[index] + '<br>' + _clusterCaptions[index])
+                .bindPopup(_clusterLevel[index] + ' - ' + _clusterLabels[index] + '<br>' + _clusterCaptions[index])
                 .addTo(map);
+            } catch (error) {
+                console.error(`Error creating polygon at index ${index}:`, error);
+            }
         });
     </script>
 
