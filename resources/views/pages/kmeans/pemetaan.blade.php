@@ -2,7 +2,7 @@
 
 @section('content')
     @if (auth()->user()->role == 'Administrator')
-        {{-- Debug information --}}
+        {{-- Debug information
         <div class="row mb-3">
             <div class="col-12">
                 <div class="card">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
