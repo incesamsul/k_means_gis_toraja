@@ -27,12 +27,12 @@
                                         }
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
-                                        <div class="legend-color" style="width: 20px; height: 20px; background-color: #{{ $key == 0 ? 'C00000' : ($key == 1 ? '00B050' : '0066CC') }}; border-radius: 50%;"></div>
+                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $key == 0 ? 'C00000' : ($key == 1 ? '00B050' : '0066CC') }}; border-radius: 2px;"></div>
                                         <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
                                     </div>
                                 @endforeach
                                 <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="all">
-                                    <div class="legend-color" style="width: 20px; height: 20px; background-color: #666666; border-radius: 50%;"></div>
+                                    <div class="legend-color" style="width: 24px; height: 16px; background-color: #666666; border-radius: 2px;"></div>
                                     <p class="mb-0 ms-2">Show All</p>
                                 </div>
                             </div>
@@ -41,12 +41,12 @@
                                 <h6 class="mb-3">Jenis Hortikultura:</h6>
                                 @foreach ($horticulturalTypes as $type)
                                     <div class="d-flex align-items-center mb-2 hort-legend-item" style="cursor: pointer;" data-jenis="{{ $type['name'] }}">
-                                        <div class="legend-color" style="width: 20px; height: 20px; background-color: {{ $type['color'] }}; border-radius: 50%;"></div>
+                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: {{ $type['color'] }}; border-radius: 2px;"></div>
                                         <p class="mb-0 ms-2">{{ $type['name'] }}</p>
                                     </div>
                                 @endforeach
                                 <div class="d-flex align-items-center mb-2 hort-legend-item" style="cursor: pointer;" data-jenis="all">
-                                    <div class="legend-color" style="width: 20px; height: 20px; background-color: #666666; border-radius: 50%;"></div>
+                                    <div class="legend-color" style="width: 24px; height: 16px; background-color: #666666; border-radius: 2px;"></div>
                                     <p class="mb-0 ms-2">Show All Types</p>
                                 </div>
                             </div>
