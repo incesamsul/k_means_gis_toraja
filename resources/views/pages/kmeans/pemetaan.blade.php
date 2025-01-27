@@ -40,11 +40,15 @@
                             <div class="horticultural-legend ms-5">
                                 <h6 class="mb-3">Jenis Hortikultura:</h6>
                                 @foreach ($horticulturalTypes as $type)
-                                    <div class="d-flex align-items-center mb-2">
+                                    <div class="d-flex align-items-center mb-2 hort-legend-item" style="cursor: pointer;" data-jenis="{{ $type['name'] }}">
                                         <div class="legend-color" style="width: 20px; height: 20px; background-color: {{ $type['color'] }}; border-radius: 50%;"></div>
                                         <p class="mb-0 ms-2">{{ $type['name'] }}</p>
                                     </div>
                                 @endforeach
+                                <div class="d-flex align-items-center mb-2 hort-legend-item" style="cursor: pointer;" data-jenis="all">
+                                    <div class="legend-color" style="width: 20px; height: 20px; background-color: #666666; border-radius: 50%;"></div>
+                                    <p class="mb-0 ms-2">Show All Types</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,6 +76,7 @@
         // Store all polygons in an array for easy access
         let polygons = [];
         let activeCluster = 'all';
+        let activeHortType = 'all';
 
         // Add horticultural types data
         let horticulturalTypes = @json($horticulturalTypes);
@@ -143,33 +148,33 @@
             return colors[clusterNum] || '#666666';
         }
 
-        // Function to update polygon colors based on selected cluster
-        function updatePolygonColors(selectedCluster) {
+        // Function to update polygon visibility based on cluster and horticultural type
+        function updatePolygonVisibility() {
             polygons.forEach((polygon, index) => {
-                const clusterNum = _clusterNumbers[index];
-                if (selectedCluster === 'all') {
+                const clusterMatch = activeCluster === 'all' || _clusterNumbers[index] === parseInt(activeCluster);
+                const hortMatch = activeHortType === 'all' || _jenisHortikultura[index] === activeHortType;
+                
+                if (clusterMatch && hortMatch) {
+                    // Show polygon with original colors
+                    const clusterColor = _clusterNumbers[index] === 1 ? '#C00000' : (_clusterNumbers[index] === 2 ? '#00B050' : '#0066CC');
+                    const jenisHortikultura = _jenisHortikultura[index];
+                    const horticulturalType = horticulturalTypes.find(type => type.name === jenisHortikultura);
+                    const borderColor = horticulturalType ? horticulturalType.color : '#000000';
+                    
                     polygon.setStyle({
-                        fillColor: getClusterColor(clusterNum),
-                        color: getClusterColor(clusterNum),
-                        fillOpacity: 0.5,
-                        weight: 1
+                        color: borderColor,
+                        weight: 3,
+                        fillColor: clusterColor,
+                        fillOpacity: 0.5
                     });
                 } else {
-                    if (clusterNum === parseInt(selectedCluster)) {
-                        polygon.setStyle({
-                            fillColor: getClusterColor(clusterNum),
-                            color: getClusterColor(clusterNum),
-                            fillOpacity: 0.5,
-                            weight: 1
-                        });
-                    } else {
-                        polygon.setStyle({
-                            fillColor: '#666666',
-                            color: '#666666',
-                            fillOpacity: 0.2,
-                            weight: 1
-                        });
-                    }
+                    // Show polygon in gray
+                    polygon.setStyle({
+                        color: '#666666',
+                        weight: 1,
+                        fillColor: '#666666',
+                        fillOpacity: 0.2
+                    });
                 }
             });
         }
@@ -183,7 +188,7 @@
             const jenisHortikultura = _jenisHortikultura[index];
             const horticulturalType = horticulturalTypes.find(type => type.name === jenisHortikultura);
             const borderColor = horticulturalType ? horticulturalType.color : '#000000';
-
+            
             // Create the polygon with cluster fill color and horticultural type border
             const correctedPolygonCoords = polygonCoords.map(coordPair => {
                 if (!Array.isArray(coordPair) || coordPair.length !== 2 || 
@@ -216,21 +221,26 @@
             }
         });
 
-        // Add click event listeners to legend items
+        // Add click event listeners for cluster legend
         document.querySelectorAll('.legend-item').forEach(item => {
             item.addEventListener('click', function() {
-                const selectedCluster = this.dataset.cluster;
-                activeCluster = selectedCluster;
-                updatePolygonColors(selectedCluster);
-                
-                // Update legend item appearances
-                document.querySelectorAll('.legend-item').forEach(legendItem => {
-                    if (legendItem.dataset.cluster === selectedCluster) {
-                        legendItem.style.opacity = '1';
-                    } else {
-                        legendItem.style.opacity = '0.5';
-                    }
+                activeCluster = this.dataset.cluster;
+                updatePolygonVisibility();
+            });
+        });
+
+        // Add click event listeners for horticultural legend
+        document.querySelectorAll('.hort-legend-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.hort-legend-item').forEach(i => {
+                    i.style.backgroundColor = 'transparent';
                 });
+                // Add active class to clicked item
+                this.style.backgroundColor = 'rgba(0,0,0,0.1)';
+                
+                activeHortType = this.dataset.jenis;
+                updatePolygonVisibility();
             });
         });
     </script>
