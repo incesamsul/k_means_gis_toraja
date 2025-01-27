@@ -21,6 +21,21 @@ class KmeansController extends Controller
             ];
         })->toArray();
 
+        // Get unique horticultural types and assign colors
+        $horticulturalTypes = collect($data)
+            ->pluck('jenis_hortikultura')
+            ->unique()
+            ->values()
+            ->map(function ($type, $index) {
+                // Generate a unique color for each type
+                $colors = ['#FF9933', '#33CC33', '#3366CC', '#CC33CC', '#FFCC00', '#FF3366', '#00CCCC'];
+                return [
+                    'name' => $type,
+                    'color' => $colors[$index % count($colors)]
+                ];
+            })
+            ->toArray();
+
         // Run K-means
         srand(42); // Set a specific seed value
         $k = 3; // Number of clusters
@@ -29,6 +44,7 @@ class KmeansController extends Controller
         $data['tanaman'] = Tanaman::all();
         $data['clusters'] = $result['clusters'];
         $data['iterations'] = $result['iterations'];
+        $data['horticulturalTypes'] = $horticulturalTypes;
         return view('pages.kmeans.pemetaan', $data);
     }
 

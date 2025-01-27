@@ -9,8 +9,9 @@
                     <div class="card-body">
                         <h5 class="card-title">Pemetaan</h5>
                         <p class="card-text">Peta ini menunjukkan 3 Cluster yang di tandai dengan masing-masing warna.</p>
-                        <div class="d-flex ">
-                            <div class="">
+                        <div class="d-flex justify-content-between">
+                            <div class="cluster-legend">
+                                <h6 class="mb-3">Cluster Legend:</h6>
                                 @foreach ($clusters as $key => $cluster)
                                     @php
                                         // Calculate average luas_lahan for the cluster
@@ -25,12 +26,25 @@
                                             $caption = 'Low';
                                         }
                                     @endphp
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div style="width: 20px; height: 20px; background-color: #{{ $key == 1 ? 'C00000' : ($key == 2 ? '00B050' : ($key == 3 ? '0066CC' : ($key == 4 ? 'FFC000' : 'C000C5'))) }}; border-radius: 50%;"></div>
-                                        <p class="mb-0 ms-2">Cluster {{ $key + 1 }}  - {{ $caption }}</p>
+                                    <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
+                                        <div class="legend-color" style="width: 20px; height: 20px; background-color: #{{ $key == 0 ? 'C00000' : ($key == 1 ? '00B050' : '0066CC') }}; border-radius: 50%;"></div>
+                                        <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
                                     </div>
                                 @endforeach
+                                <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="all">
+                                    <div class="legend-color" style="width: 20px; height: 20px; background-color: #666666; border-radius: 50%;"></div>
+                                    <p class="mb-0 ms-2">Show All</p>
+                                </div>
+                            </div>
 
+                            <div class="horticultural-legend ms-5">
+                                <h6 class="mb-3">Jenis Hortikultura:</h6>
+                                @foreach ($horticulturalTypes as $type)
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="legend-color" style="width: 20px; height: 20px; background-color: {{ $type['color'] }}; border-radius: 50%;"></div>
+                                        <p class="mb-0 ms-2">{{ $type['name'] }}</p>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -55,6 +69,13 @@
         // Create a map centered on Tana Toraja, Indonesia
         var map = L.map('map').setView([-3.0753, 119.7426], 11);
 
+        // Store all polygons in an array for easy access
+        let polygons = [];
+        let activeCluster = 'all';
+
+        // Add horticultural types data
+        let horticulturalTypes = @json($horticulturalTypes);
+
         // Add a tile layer to the map (OpenStreetMap in this case)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -62,9 +83,11 @@
         }).addTo(map);
 
         let _coordinates = [];
-        let _clusterLabels = []; // To hold the labels for clusters
+        let _clusterLabels = []; 
         let _clusterCaptions = [];
         let _clusterLevel = [];
+        let _clusterNumbers = []; 
+        let _jenisHortikultura = [];
 
         @foreach ($clusters as $key => $cluster)
             @php
@@ -79,38 +102,29 @@
             @endphp
 
             @foreach ($cluster as $data)
-            console.log(@json($data))
                 _coordinates.push(@json($data['wilayah']->koordinat));
-                _clusterLabels.push('Cluster {{ $key + 1 }}'); // Example label for cluster
+                _clusterLabels.push('Cluster {{ $key + 1 }}');
                 _clusterCaptions.push('{{ $data['wilayah']->nama_wilayah }} ({{ $data['wilayah']->lokasi }} ) <br> Luas Lahan : {{ $data['luas_lahan'] }} <br> Produksi : {{ $data['produksi'] }} <br> Produktivitas : {{ $data['produktivitas'] }} <br> Jenis Hortikultura : {{ $data['jenis_hortikultura'] }} <br> Persentase : {{ $data['persentase'] }}');
-                
                 _clusterLevel.push('{{ $level }}');
+                _clusterNumbers.push({{ $key + 1 }}); 
+                _jenisHortikultura.push('{{ $data['jenis_hortikultura'] }}');
             @endforeach
         @endforeach
 
         function parseCoordinateString(coordString) {
-            console.log('Raw coordinates:', coordString);
-            
             const cleanedString = coordString
                 .replace(/^\[|\]$/g, '')
                 .replace(/…/g, '');
-                
-            console.log('Cleaned string:', cleanedString);
             
             const pairs = cleanedString.split('],[');
-            console.log('Coordinate pairs:', pairs);
             
-            const result = pairs.map(pair => {
+            return pairs.map(pair => {
                 const coords = pair.split(',').map(Number);
-                console.log('Parsed pair:', coords);
                 return coords;
             });
-            
-            return result;
         }
 
         const parsedData = _coordinates.map((coords, index) => {
-            console.log(`Parsing coordinates for index ${index}`);
             try {
                 return parseCoordinateString(coords);
             } catch (error) {
@@ -119,60 +133,107 @@
             }
         });
 
+        // Function to get color based on cluster number
+        function getClusterColor(clusterNum) {
+            const colors = {
+                1: '#C00000',
+                2: '#00B050',
+                3: '#0066CC'
+            };
+            return colors[clusterNum] || '#666666';
+        }
+
+        // Function to update polygon colors based on selected cluster
+        function updatePolygonColors(selectedCluster) {
+            polygons.forEach((polygon, index) => {
+                const clusterNum = _clusterNumbers[index];
+                if (selectedCluster === 'all') {
+                    polygon.setStyle({
+                        fillColor: getClusterColor(clusterNum),
+                        color: getClusterColor(clusterNum),
+                        fillOpacity: 0.5,
+                        weight: 1
+                    });
+                } else {
+                    if (clusterNum === parseInt(selectedCluster)) {
+                        polygon.setStyle({
+                            fillColor: getClusterColor(clusterNum),
+                            color: getClusterColor(clusterNum),
+                            fillOpacity: 0.5,
+                            weight: 1
+                        });
+                    } else {
+                        polygon.setStyle({
+                            fillColor: '#666666',
+                            color: '#666666',
+                            fillOpacity: 0.2,
+                            weight: 1
+                        });
+                    }
+                }
+            });
+        }
+
         parsedData.forEach((polygonCoords, index) => {
             if (!polygonCoords || polygonCoords.length === 0) {
-                console.warn(`Skipping invalid polygon at index ${index}`);
                 return;
             }
 
-            // Swap [longitude, latitude] to [latitude, longitude] and validate coordinates
+            // Find the horticultural type color
+            const jenisHortikultura = _jenisHortikultura[index];
+            const horticulturalType = horticulturalTypes.find(type => type.name === jenisHortikultura);
+            const borderColor = horticulturalType ? horticulturalType.color : '#000000';
+
+            // Create the polygon with cluster fill color and horticultural type border
             const correctedPolygonCoords = polygonCoords.map(coordPair => {
                 if (!Array.isArray(coordPair) || coordPair.length !== 2 || 
                     !isFinite(coordPair[0]) || !isFinite(coordPair[1])) {
-                    console.error(`Invalid coordinate pair at index ${index}:`, coordPair);
                     return null;
                 }
                 return [coordPair[1], coordPair[0]];
             }).filter(coord => coord !== null);
 
             if (correctedPolygonCoords.length === 0) {
-                console.warn(`No valid coordinates for polygon at index ${index}`);
                 return;
             }
 
-            console.log('Debug -', index, ':', {
-                clusterLabel: _clusterLabels[index],
-                clusterLevel: _clusterLevel[index],
-                coordinates: correctedPolygonCoords
-            });
-
-            let color;
-            if (_clusterLevel[index] === 'High') {
-                color = '#00B050';  // Green for High
-                console.log('Setting GREEN for', index);
-            } else if (_clusterLevel[index] === 'Medium') {
-                color = '#C00000';  // Red for Medium
-                console.log('Setting RED for', index);
-            } else {
-                color = '#C000C5';  // Purple for Low
-                console.log('Setting PURPLE for', index);
-            }
+            const clusterNum = _clusterNumbers[index];
+            const color = getClusterColor(clusterNum);
 
             try {
-                L.polygon(correctedPolygonCoords, {
-                    color: color,
-                    weight: 0,
+                const polygon = L.polygon(correctedPolygonCoords, {
+                    color: borderColor,
+                    weight: 3,
                     fillColor: color,
                     fillOpacity: 0.5
                 })
                 .bindPopup(_clusterLevel[index] + ' - ' + _clusterLabels[index] + '<br>' + _clusterCaptions[index])
                 .addTo(map);
+
+                polygons.push(polygon);
             } catch (error) {
                 console.error(`Error creating polygon at index ${index}:`, error);
             }
         });
-    </script>
 
+        // Add click event listeners to legend items
+        document.querySelectorAll('.legend-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const selectedCluster = this.dataset.cluster;
+                activeCluster = selectedCluster;
+                updatePolygonColors(selectedCluster);
+                
+                // Update legend item appearances
+                document.querySelectorAll('.legend-item').forEach(legendItem => {
+                    if (legendItem.dataset.cluster === selectedCluster) {
+                        legendItem.style.opacity = '1';
+                    } else {
+                        legendItem.style.opacity = '0.5';
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
         var table = $('#table-data').DataTable({
