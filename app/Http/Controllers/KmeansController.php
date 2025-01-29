@@ -57,7 +57,7 @@ class KmeansController extends Controller
                 'luas_lahan' => (float) $item->luas_lahan,
                 'produksi' => (float) $item->produksi,
                 'produktivitas' => (float) $item->produktivitas,
-                'jenis_hortikultura' => $item->jenis_hortikultura,
+                'jenis_hortikultura' => $item->jenis_horikultura,
                 'persentase' => $item->persentase,
             ];
         })->toArray();
