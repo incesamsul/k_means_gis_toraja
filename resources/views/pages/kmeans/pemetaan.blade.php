@@ -70,189 +70,175 @@
 @section('script')
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Create a map centered on Tana Toraja, Indonesia
+        // Initialize map
         var map = L.map('map').setView([-3.0753, 119.7426], 11);
-
-        // Store all polygons in an array for easy access
-        let polygons = [];
-        let activeCluster = 'all';
-        let activeHortType = 'all';
-
-        // Add horticultural types data
-        let horticulturalTypes = @json($horticulturalTypes);
-
-        // Add a tile layer to the map (OpenStreetMap in this case)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        let _coordinates = [];
-        let _clusterLabels = []; 
-        let _clusterCaptions = [];
-        let _clusterLevel = [];
-        let _clusterNumbers = []; 
-        let _jenisHortikultura = [];
+        // Initialize variables
+        var polygons = [];
+        var activeCluster = 'all';
+        var activeHortType = 'all';
+        var horticulturalTypes = @json($horticulturalTypes);
+        var polygonData = {};
 
-        @foreach ($clusters as $key => $cluster)
+        // Process data and create polygons
+        @foreach ($clusters as $clusterIndex => $cluster)
             @php
                 $avgLuasLahan = collect($cluster)->avg('luas_lahan');
-                if ($avgLuasLahan >= 700) {
-                    $level = 'High';
-                } elseif ($avgLuasLahan >= 400) {
-                    $level = 'Medium';
-                } else {
-                    $level = 'Low';
-                }
+                $level = $avgLuasLahan >= 700 ? 'High' : ($avgLuasLahan >= 400 ? 'Medium' : 'Low');
             @endphp
 
             @foreach ($cluster as $data)
-                _coordinates.push(@json($data['wilayah']->koordinat));
-                _clusterLabels.push('Cluster {{ $key + 1 }}');
-                _clusterCaptions.push('{{ $data['wilayah']->nama_wilayah }} ({{ $data['wilayah']->lokasi }} ) <br> Luas Lahan : {{ $data['luas_lahan'] }} <br> Produksi : {{ $data['produksi'] }} <br> Produktivitas : {{ $data['produktivitas'] }} <br> Jenis Hortikultura : {{ $data['jenis_hortikultura'] }} <br> Persentase : {{ $data['persentase'] }}');
-                _clusterLevel.push('{{ $level }}');
-                _clusterNumbers.push({{ $key + 1 }}); 
-                _jenisHortikultura.push('{{ $data['jenis_hortikultura'] }}');
+                @php
+                    $wilayahId = $data['wilayah']->id;
+                @endphp
+
+                if (!polygonData['{{ $wilayahId }}']) {
+                    polygonData['{{ $wilayahId }}'] = {
+                        id: '{{ $wilayahId }}',
+                        nama: '{{ $data['wilayah']->nama_wilayah }}',
+                        lokasi: '{{ $data['wilayah']->lokasi }}',
+                        koordinat: @json($data['wilayah']->koordinat),
+                        dataPoints: []
+                    };
+                }
+
+                polygonData['{{ $wilayahId }}'].dataPoints.push({
+                    cluster: {{ $clusterIndex + 1 }},
+                    level: '{{ $level }}',
+                    luas_lahan: {{ $data['luas_lahan'] }},
+                    produksi: {{ $data['produksi'] }},
+                    produktivitas: {{ $data['produktivitas'] }},
+                    jenis_hortikultura: '{{ $data['jenis_hortikultura'] }}',
+                    persentase: '{{ $data['persentase'] }}'
+                });
             @endforeach
         @endforeach
 
-        function parseCoordinateString(coordString) {
-            const cleanedString = coordString
-                .replace(/^\[|\]$/g, '')
-                .replace(/…/g, '');
-            
-            const pairs = cleanedString.split('],[');
-            
-            return pairs.map(pair => {
-                const coords = pair.split(',').map(Number);
-                return coords;
-            });
-        }
-
-        const parsedData = _coordinates.map((coords, index) => {
+        // Helper function to parse coordinates
+        function parseCoordinates(coordString) {
             try {
-                return parseCoordinateString(coords);
+                return coordString
+                    .replace(/^\[|\]$/g, '')
+                    .replace(/…/g, '')
+                    .split('],[')
+                    .map(pair => pair.split(',').map(Number))
+                    .map(pair => [pair[1], pair[0]])
+                    .filter(pair => pair.every(coord => !isNaN(coord) && isFinite(coord)));
             } catch (error) {
-                console.error(`Error parsing coordinates at index ${index}:`, error);
+                console.error('Error parsing coordinates:', error);
                 return [];
             }
-        });
-
-        // Function to get color based on cluster number
-        function getClusterColor(clusterNum) {
-            const colors = {
-                1: '#C00000',
-                2: '#00B050',
-                3: '#0066CC'
-            };
-            return colors[clusterNum] || '#666666';
         }
 
-        // Function to update polygon visibility based on cluster and horticultural type
-        function updatePolygonVisibility() {
-            polygons.forEach((polygon, index) => {
-                const clusterMatch = activeCluster === 'all' || _clusterNumbers[index] === parseInt(activeCluster);
-                const hortMatch = activeHortType === 'all' || _jenisHortikultura[index] === activeHortType;
-                
-                if (clusterMatch && hortMatch) {
-                    // Show polygon with original colors
-                    const clusterColor = _clusterNumbers[index] === 1 ? '#C00000' : (_clusterNumbers[index] === 2 ? '#00B050' : '#0066CC');
-                    const jenisHortikultura = _jenisHortikultura[index];
-                    const horticulturalType = horticulturalTypes.find(type => type.name === jenisHortikultura);
-                    const borderColor = horticulturalType ? horticulturalType.color : '#000000';
+        // Create polygons on the map
+        Object.values(polygonData).forEach(data => {
+            const coords = parseCoordinates(data.koordinat);
+            if (coords.length === 0) return;
+
+            const polygon = L.polygon(coords, {
+                color: '#666666',
+                weight: 2,
+                fillColor: '#666666',
+                fillOpacity: 0.5
+            }).addTo(map);
+
+            polygons.push({
+                element: polygon,
+                data: data
+            });
+        });
+
+        // Get color for cluster
+        function getClusterColor(cluster) {
+            return cluster === 1 ? '#C00000' : 
+                   cluster === 2 ? '#00B050' : 
+                   cluster === 3 ? '#0066CC' : '#666666';
+        }
+
+        // Create popup content
+        function createPopupContent(data) {
+            let content = `<strong>${data.nama}</strong> (${data.lokasi})<br><br>`;
+            
+            const filteredPoints = data.dataPoints.filter(point => {
+                const clusterMatch = activeCluster === 'all' || point.cluster === parseInt(activeCluster);
+                const hortMatch = activeHortType === 'all' || point.jenis_hortikultura === activeHortType;
+                return clusterMatch && hortMatch;
+            });
+
+            if (filteredPoints.length === 0) {
+                return 'No matching data for current filters';
+            }
+
+            filteredPoints.forEach(point => {
+                content += `<strong>Cluster ${point.cluster} (${point.level})</strong><br>`;
+                content += `Luas Lahan: ${point.luas_lahan}<br>`;
+                content += `Produksi: ${point.produksi}<br>`;
+                content += `Produktivitas: ${point.produktivitas}<br>`;
+                content += `Jenis Hortikultura: ${point.jenis_hortikultura}<br>`;
+                content += `Persentase: ${point.persentase}<br><br>`;
+            });
+
+            return content;
+        }
+
+        // Update polygon visibility and styles
+        function updatePolygons() {
+            polygons.forEach(({ element, data }) => {
+                const matchingPoints = data.dataPoints.filter(point => {
+                    const clusterMatch = activeCluster === 'all' || point.cluster === parseInt(activeCluster);
+                    const hortMatch = activeHortType === 'all' || point.jenis_hortikultura === activeHortType;
+                    return clusterMatch && hortMatch;
+                });
+
+                if (matchingPoints.length > 0) {
+                    const firstPoint = matchingPoints[0];
+                    const hortType = horticulturalTypes.find(t => t.name === firstPoint.jenis_hortikultura);
                     
-                    polygon.setStyle({
-                        color: borderColor,
+                    element.setStyle({
+                        color: hortType ? hortType.color : '#000000',
                         weight: 3,
-                        fillColor: clusterColor,
+                        fillColor: getClusterColor(firstPoint.cluster),
                         fillOpacity: 0.5
                     });
                 } else {
-                    // Show polygon in gray
-                    polygon.setStyle({
+                    element.setStyle({
                         color: '#666666',
                         weight: 1,
                         fillColor: '#666666',
                         fillOpacity: 0.2
                     });
                 }
+
+                element.unbindPopup();
+                element.bindPopup(createPopupContent(data));
             });
         }
 
-        parsedData.forEach((polygonCoords, index) => {
-            if (!polygonCoords || polygonCoords.length === 0) {
-                return;
-            }
-
-            // Find the horticultural type color
-            const jenisHortikultura = _jenisHortikultura[index];
-            const horticulturalType = horticulturalTypes.find(type => type.name === jenisHortikultura);
-            const borderColor = horticulturalType ? horticulturalType.color : '#000000';
-            
-            // Create the polygon with cluster fill color and horticultural type border
-            const correctedPolygonCoords = polygonCoords.map(coordPair => {
-                if (!Array.isArray(coordPair) || coordPair.length !== 2 || 
-                    !isFinite(coordPair[0]) || !isFinite(coordPair[1])) {
-                    return null;
-                }
-                return [coordPair[1], coordPair[0]];
-            }).filter(coord => coord !== null);
-
-            if (correctedPolygonCoords.length === 0) {
-                return;
-            }
-
-            const clusterNum = _clusterNumbers[index];
-            const color = getClusterColor(clusterNum);
-
-            try {
-                const polygon = L.polygon(correctedPolygonCoords, {
-                    color: borderColor,
-                    weight: 3,
-                    fillColor: color,
-                    fillOpacity: 0.5
-                })
-                .bindPopup(_clusterLevel[index] + ' - ' + _clusterLabels[index] + '<br>' + _clusterCaptions[index])
-                .addTo(map);
-
-                polygons.push(polygon);
-            } catch (error) {
-                console.error(`Error creating polygon at index ${index}:`, error);
-            }
-        });
-
-        // Add click event listeners for cluster legend
+        // Event listeners
         document.querySelectorAll('.legend-item').forEach(item => {
             item.addEventListener('click', function() {
                 activeCluster = this.dataset.cluster;
-                updatePolygonVisibility();
+                updatePolygons();
             });
         });
 
-        // Add click event listeners for horticultural legend
         document.querySelectorAll('.hort-legend-item').forEach(item => {
             item.addEventListener('click', function() {
-                // Remove active class from all items
                 document.querySelectorAll('.hort-legend-item').forEach(i => {
                     i.style.backgroundColor = 'transparent';
                 });
-                // Add active class to clicked item
                 this.style.backgroundColor = 'rgba(0,0,0,0.1)';
                 
                 activeHortType = this.dataset.jenis;
-                updatePolygonVisibility();
+                updatePolygons();
             });
         });
-    </script>
 
-    <script>
-        var table = $('#table-data').DataTable({
-            "lengthChange": false,
-            "responsive": true,
-            dom: 'Bfrtip',
-            buttons: ['copy', 'excel', 'pdf']
-        });
-
-        $('#liPemetaan').addClass('active');
+        // Initial update
+        updatePolygons();
     </script>
-@endSection
+@endsection
