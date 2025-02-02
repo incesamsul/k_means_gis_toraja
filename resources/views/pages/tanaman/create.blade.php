@@ -21,7 +21,7 @@
                             <label for="name">Wilayah</label>
                             <select name="wilayah_id" id="wilayah_id" class="form-control">
                                 @foreach ($wilayah as $row)
-                                    <option value="{{ $row->id }}">{{ $row->nama_wilayah }}</option>
+                                    <option value="{{ $row->id }}">{{ $row->nama_wilayah }} - {{ $row->lokasi }}</option>
                                 @endforeach
                             </select>
                         </div>

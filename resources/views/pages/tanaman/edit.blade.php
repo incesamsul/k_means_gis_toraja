@@ -16,7 +16,7 @@
                                 @foreach ($wilayah as $row)
                                     <option value="{{ $row->id }}"
                                         {{ $row->id == $tanaman->wilayah_id ? 'selected' : '' }}>
-                                        {{ $row->nama_wilayah }}
+                                        {{ $row->nama_wilayah }} - {{ $row->lokasi }}
                                     </option>
                                 @endforeach
                             </select>

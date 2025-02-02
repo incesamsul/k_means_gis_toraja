@@ -25,7 +25,7 @@
                             @foreach ($tanaman as $row)
                                 <tr>
                                     <td>{{ $row->id }}</td>
-                                    <td>{{ $row->wilayah->nama_wilayah ?? '' }}</td>
+                                    <td>{{ $row->wilayah->nama_wilayah ?? '' }} - {{ $row->wilayah->lokasi ?? '' }}</td>
                                     <td>{{ $row->luas_lahan }}</td>
                                     <td>{{ $row->produksi }}</td>
                                     <td>{{ $row->produktivitas }}</td>

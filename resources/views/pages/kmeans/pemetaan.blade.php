@@ -27,7 +27,7 @@
                                         }
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
-                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $key == 0 ? 'C00000' : ($key == 1 ? '00B050' : '0066CC') }}; border-radius: 2px;"></div>
+                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $key == 0 ? 'FFFF00' : ($key == 1 ? 'FF0000' : '00FF00') }}; border-radius: 2px;"></div>
                                         <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
                                     </div>
                                 @endforeach
@@ -154,9 +154,9 @@
 
         // Get color for cluster
         function getClusterColor(cluster) {
-            return cluster === 1 ? '#C00000' : 
-                   cluster === 2 ? '#00B050' : 
-                   cluster === 3 ? '#0066CC' : '#666666';
+            return cluster === 1 ? '#FFFF00' : 
+                   cluster === 2 ? '#FF0000' : 
+                   cluster === 3 ? '#00FF00' : '#666666';
         }
 
         // Create popup content

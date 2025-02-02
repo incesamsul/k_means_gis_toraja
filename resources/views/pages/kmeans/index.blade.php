@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <!-- <div class="row mt-4">
             {{-- Pie Chart --}}
             <div class="col-md-6">
                 <div class="card">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- K-means Process Details -->
         <div class="row mt-4">
@@ -170,7 +170,7 @@
             </div>
         </div>
 
-        {{-- Chart Section --}}
+        <!-- {{-- Chart Section --}}
         <div class="row mt-4">
             <div class="col-sm-12">
                 <div class="card">
@@ -180,7 +180,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         @foreach ($clusters as $key => $row)
             <div class="row mt-4">
@@ -331,17 +331,17 @@
                     {
                         label: 'Cluster Tinggi',
                         data: clusterData.map(d => d.cluster1),
-                        backgroundColor: '#FF9933',
+                        backgroundColor: '#00FF00',
                     },
                     {
                         label: 'Cluster Sedang',
                         data: clusterData.map(d => d.cluster2),
-                        backgroundColor: '#33CC33',
+                        backgroundColor: '#FFFF00',
                     },
                     {
                         label: 'Cluster Rendah',
                         data: clusterData.map(d => d.cluster3),
-                        backgroundColor: '#3366CC',
+                        backgroundColor: '#FF0000',
                     }
                 ]
             },
