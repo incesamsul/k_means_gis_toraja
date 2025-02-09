@@ -13,9 +13,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Wilayah</th>
-                                <th>Luas Lahan</th>
-                                <th>Produksi</th>
-                                <th>Produktivitas</th>
+                                <th>Luas Lahan hektar (ha)</th>
+                                <th>Produksi kuintal (kw)</th>
+                                <th>Produktivitas kuintal/perhektar (kw/ha)</th>
                                 <th>Jenis Horikultura</th>
                                 <th>Persentase</th>
                                 <th>Actions</th>
@@ -26,9 +26,9 @@
                                 <tr>
                                     <td>{{ $row->id }}</td>
                                     <td>{{ $row->wilayah->nama_wilayah ?? '' }} - {{ $row->wilayah->lokasi ?? '' }}</td>
-                                    <td>{{ $row->luas_lahan }} hektar (ha) </td>
-                                    <td>{{ $row->produksi }} kuintal (kw)</td>
-                                    <td>{{ $row->produktivitas }} kuintal/perhektar (kw/ha)</td>
+                                    <td>{{ $row->luas_lahan }}  </td>
+                                    <td>{{ $row->produksi }} </td>
+                                    <td>{{ $row->produktivitas }} </td>
                                     <td>{{ $row->jenis_horikultura }}</td>
                                     <td>{{ $row->persentase }} %</td>
                                     <td>
