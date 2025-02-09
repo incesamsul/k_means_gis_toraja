@@ -196,9 +196,9 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Wilayah</th>
-                                        <th>Luas Lahan</th>
-                                        <th>Produksi</th>
-                                        <th>Produktivitas</th>
+                                        <th>Luas Lahan (ha)</th>
+                                        <th>Produksi (kw)</th>
+                                        <th>Produktivitas (kw/ha)</th>
                                         <th>Jenis Horikultura</th>
                                         <th>Persentase</th>
                                     </tr>
@@ -230,9 +230,9 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Luas Lahan</th>
-                                    <th>Produksi</th>
-                                    <th>Produktivitas</th>
+                                    <th>Luas Lahan (ha)</th>
+                                    <th>Produksi (kw)</th>
+                                    <th>Produktivitas (kw/ha)</th>
                                     <th>Jenis Horikultura</th>
                                     <th>Persentase</th>
                                 </tr>
