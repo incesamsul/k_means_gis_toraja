@@ -109,9 +109,9 @@
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th>Cluster</th>
-                                                    <th>Luas Lahan</th>
-                                                    <th>Produksi</th>
-                                                    <th>Produktivitas</th>
+                                                    <th>Luas Lahan (ha)</th>
+                                                    <th>Produksi (kw)</th>
+                                                    <th>Produktivitas (kw/ha)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -144,9 +144,9 @@
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th>Cluster</th>
-                                                    <th>Luas Lahan</th>
-                                                    <th>Produksi</th>
-                                                    <th>Produktivitas</th>
+                                                    <th>Luas Lahan (ha)</th>
+                                                    <th>Produksi (kw)</th>
+                                                    <th>Produktivitas (kw/ha)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -244,7 +244,7 @@
                                         <td>{{ $row->luas_lahan }}</td>
                                         <td>{{ $row->produksi }}</td>
                                         <td>{{ $row->produktivitas }}</td>
-                                        <td>{{ $row->jenis_hortikultura }}</td>
+                                        <td>{{ $row->jenis_horikultura }}</td>
                                         <td>{{ $row->persentase }}</td>
                                     </tr>
                                 @endforeach
