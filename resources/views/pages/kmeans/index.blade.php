@@ -191,7 +191,7 @@
                         </div>
                         <div class="card-body">
                             <p><strong>Kelmopok : {{ $loop->iteration }}</strong></p>
-                            <table class="table table-striped">
+                            <table class="table table-striped table-data">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -226,7 +226,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5>tanaman</h5>
-                        <table class="table" id="table-data">
+                        <table class="table table-data" id="table-data">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -291,12 +291,33 @@
     {{-- Chart.js CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+var table = $('.table-data').DataTable({
+    "lengthChange": false,
+    "responsive": true,
+    dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+    buttons: [
+        {
+            extend: 'copy',
+            className: 'btn btn-primary btn-sm'
+        },
+        {
+            extend: 'excel',
+            className: 'btn btn-primary btn-sm'
+        },
+        {
+            extend: 'pdf',
+            className: 'btn btn-primary btn-sm'
+        }
+    ]
+});
+
         // Prepare data for the charts
         const clusters = @json($clusters);
-        
+
         // Get unique wilayah names
         const wilayahs = [...new Set(
-            clusters.flatMap(cluster => 
+            clusters.flatMap(cluster =>
                 cluster.map(item => item.wilayah.nama_wilayah)
             )
         )].sort();
@@ -349,7 +370,7 @@
                 responsive: true,
                 scales: {
                     x: { title: { display: true, text: 'Wilayah' } },
-                    y: { 
+                    y: {
                         beginAtZero: true,
                         title: { display: true, text: 'Jumlah Data' }
                     }
@@ -538,10 +559,10 @@
             options: {
                 responsive: true,
                 scales: {
-                    x: { 
+                    x: {
                         title: { display: true, text: 'Luas Lahan' }
                     },
-                    y: { 
+                    y: {
                         title: { display: true, text: 'Produksi' }
                     }
                 }
@@ -574,7 +595,7 @@
             options: {
                 responsive: true,
                 scales: {
-                    x: { 
+                    x: {
                         title: { display: true, text: 'Wilayah' }
                     },
                     y: {
@@ -586,15 +607,7 @@
             }
         });
 
-        // table data
-        var table = $('#table-data').DataTable({
-            "lengthChange": false,
-            "responsive": true,
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'excel', 'pdf'
-            ]
-        });
+
 
         $('#liKmeans').addClass('active');
     </script>

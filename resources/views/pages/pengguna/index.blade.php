@@ -89,6 +89,7 @@
                             <select class="form-select" name="tipe_pengguna" id="tipe-pengguna">
                                 <option selected>Pilih Role</option>
                                 <option>Administrator</option>
+                                <option value="kepala_desa">Kepala Desa</option>
                                 <option>user</option>
                             </select>
                         </div>

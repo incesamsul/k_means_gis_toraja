@@ -26,11 +26,11 @@
                                 <tr>
                                     <td>{{ $row->id }}</td>
                                     <td>{{ $row->wilayah->nama_wilayah ?? '' }} - {{ $row->wilayah->lokasi ?? '' }}</td>
-                                    <td>{{ $row->luas_lahan }}</td>
-                                    <td>{{ $row->produksi }}</td>
-                                    <td>{{ $row->produktivitas }}</td>
+                                    <td>{{ $row->luas_lahan }} hektar (ha) </td>
+                                    <td>{{ $row->produksi }} kuintal (kw)</td>
+                                    <td>{{ $row->produktivitas }} kuintal/perhektar (kw/ha)</td>
                                     <td>{{ $row->jenis_horikultura }}</td>
-                                    <td>{{ $row->persentase }}</td>
+                                    <td>{{ $row->persentase }} %</td>
                                     <td>
                                         <a href="{{ route('tanaman.edit', $row->id) }}"
                                             class="btn btn-primary btn-sm">Edit</a>
