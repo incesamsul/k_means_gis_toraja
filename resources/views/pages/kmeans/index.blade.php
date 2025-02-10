@@ -1,7 +1,7 @@
 @extends('layouts.v_template')
 
 @section('content')
-    @if (auth()->user()->role == 'Administrator')
+    @if (true)
         {{-- Charts Dashboard Section --}}
         {{-- Bar Chart (Full Width) --}}
         <div class="row mt-4">

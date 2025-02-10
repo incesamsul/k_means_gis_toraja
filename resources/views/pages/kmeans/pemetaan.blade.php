@@ -1,8 +1,8 @@
 @extends('layouts.v_template')
 
 @section('content')
-    @if (auth()->user()->role == 'Administrator')
-        
+    @if (true)
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -154,15 +154,15 @@
 
         // Get color for cluster
         function getClusterColor(cluster) {
-            return cluster === 1 ? '#FFFF00' : 
-                   cluster === 2 ? '#FF0000' : 
+            return cluster === 1 ? '#FFFF00' :
+                   cluster === 2 ? '#FF0000' :
                    cluster === 3 ? '#00FF00' : '#666666';
         }
 
         // Create popup content
         function createPopupContent(data) {
             let content = `<strong>${data.nama}</strong> (${data.lokasi})<br><br>`;
-            
+
             const filteredPoints = data.dataPoints.filter(point => {
                 const clusterMatch = activeCluster === 'all' || point.cluster === parseInt(activeCluster);
                 const hortMatch = activeHortType === 'all' || point.jenis_hortikultura === activeHortType;
@@ -197,7 +197,7 @@
                 if (matchingPoints.length > 0) {
                     const firstPoint = matchingPoints[0];
                     const hortType = horticulturalTypes.find(t => t.name === firstPoint.jenis_hortikultura);
-                    
+
                     element.setStyle({
                         color: hortType ? hortType.color : '#000000',
                         weight: 3,
@@ -232,7 +232,7 @@
                     i.style.backgroundColor = 'transparent';
                 });
                 this.style.backgroundColor = 'rgba(0,0,0,0.1)';
-                
+
                 activeHortType = this.dataset.jenis;
                 updatePolygons();
             });

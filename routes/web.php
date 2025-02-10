@@ -38,7 +38,7 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', [LoginController::class, 'login'])->name('login');
 });
 
-Route::group(['middleware' => ['auth', 'ceklevel:Administrator,user']], function () {
+Route::group(['middleware' => ['auth', 'ceklevel:Administrator,user,kepala_desa']], function () {
 
     Route::get('/dashboard', [General::class, 'dashboard']);
     Route::get('/profile', [General::class, 'profile']);
