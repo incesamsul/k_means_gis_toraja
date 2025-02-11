@@ -271,7 +271,12 @@
 var table = $('.table-data').DataTable({
     "lengthChange": false,
     "responsive": true,
-    dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+    dom: @if(auth()->user()->role == 'Administrator' || auth()->user()->role == 'kepala_desa')
+        '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
+    @else
+        '<"row"<"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
+    @endif,
+    @if(auth()->user()->role == 'Administrator' || auth()->user()->role == 'kepala_desa')
     buttons: [
         {
             extend: 'copy',
@@ -286,6 +291,7 @@ var table = $('.table-data').DataTable({
             className: 'btn btn-primary btn-sm'
         }
     ]
+    @endif
 });
 
         // Prepare data for the charts
