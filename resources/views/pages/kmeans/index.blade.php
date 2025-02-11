@@ -91,6 +91,7 @@
         </div> -->
 
         <!-- K-means Process Details -->
+        @if (auth()->user()->role == 'Administrator')
         <div class="row mt-4">
             <div class="col-sm-12">
                 <div class="card">
@@ -169,7 +170,7 @@
                 </div>
             </div>
         </div>
-
+        @endif
         <!-- {{-- Chart Section --}}
         <div class="row mt-4">
             <div class="col-sm-12">
@@ -256,32 +257,7 @@
         </div>
     @endif
 
-    @if (auth()->user()->role == 'user')
-        <div class="row">
-            <h4><strong>Data row</strong></h5>
-                <p><small>List data row dibawah ini</small></p>
-                @foreach ($tanaman as $row)
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <img src="{{ asset('storage/tanaman/' . $row->image) }}" class="card-img-top"
-                                alt="{{ $row->name }}"
-                                style="width: 100%; height: 300px; object-fit: cover; object-position: center;">
-                            <div class="card-body pb-2">
-                                <h5 class="card-title">{{ $row->name }}</h5>
-                                <p class="card-text">A{{ $loop->iteration }}</p>
-                                <div class="flex flex-row">
-                                    <a href="{{ route('tanaman.show', $row->id) }}"
-                                        class="btn bg-main text-white py-3  btn-sm">Detail</a>
-                                    <a href="{{ URL::to('/pilih-row' . '/' . $row->id) }}"
-                                        class="btn bg-warning text-white py-3  btn-sm">Pilih</a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-        </div>
-    @endif
+   
 
 
 

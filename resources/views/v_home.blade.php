@@ -198,81 +198,38 @@
 
     <!--====== K-MEANS PART START ======-->
 
-    <section id="kmeans" class="about-area pt-70 pb-120">
+    <!-- Add this before the footer section -->
+    <section id="visi-misi" class="about-area pt-70 pb-120">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-title text-center pb-25">
+                        <h3 class="title">Visi & Misi</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
                     <div class="about-content mt-50 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <h4 class="about-title">K-Means</h4>
-                        <p class="text">K-Means adalah algoritma machine learning yang digunakan untuk clustering. Clustering adalah proses mengelompokkan data menjadi beberapa cluster berdasarkan sifat yang sama. Pada aplikasi ini, kita menggunakan K-Means untuk mengelompokkan data tanaman berdasarkan sifat yang sama.</p>
+                        <h4 class="about-title">Visi</h4>
+                        <p class="text">Terwujudnya pertanian yang maju, produktif dan tangguh sebagai pilar utama pembangunan ekonomi daerah</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-content mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
+                        <h4 class="about-title">Misi</h4>
+                        <ul class="text">
+                            <li class="mb-2">1. Membina dan mengembangkan komoditas pertanian/perkebunan yang potensi dan berdaya saing tinggi</li>
+                            <li class="mb-2">2. Mengoptimalkan pemanfaatan sumber daya lahan dan teknologi pertanian secara berkelanjutan dan berwawasan lingkungan</li>
+                            <li class="mb-2">3. Meningkatkan kualitas dan kapasitas sumber</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!--====== SERVICES PART ENDS ======-->
-
-    <!--====== ABOUT PART START ======-->
-
-    <section id="about" class="about-area pt-70 pb-120">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="about-image mt-50 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <div class="about-shape"></div>
-                        <img class="app" src="{{ asset('landing-page/main/') }}/assets/images/profile.png" alt="app">
-                    </div> <!-- about image -->
-                </div>
-                <div class="col-lg-6">
-                    <div class="about-content mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <div class="section-title">
-                            <h3 class="title">Pemetaan</h3>
-                            <p class="text">Pemetaan dalam aplikasi ini adalah proses mengelompokkan data tanaman berdasarkan sifat yang sama</p>
-                        </div> <!-- section title -->
-                        <a href="{{ URL::to('/login') }}" rel="nofollow" class="main-btn">Lihat Peta</a>
-                    </div> <!-- about content -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
-
-    <!--====== ABOUT PART ENDS ======-->
-
-
-    <!--====== DOWNLOAD PART START ======-->
-
-    <section id="download" class="download-area pt-70 pb-40">
-        <div class="container">
-            <div class="row justify-content-center align-items-center">
-                <div class="col-lg-6 col-md-9">
-                    <div class="download-image mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
-                        <img class="image" src="{{ asset('landing-page/main/') }}/assets/images/list.png" alt="download">
-
-                        <div class="download-shape-1"></div>
-                        <div class="download-shape-2">
-                            <img class="svg" src="{{ asset('landing-page/main/') }}/assets/images/download-shape.svg" alt="shape">
-                        </div>
-                    </div> <!-- download image -->
-                </div>
-                <div class="col-lg-6">
-                    <div class="download-content mt-45 wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <h3 class="download-title">Download and mulai gunakan!</h3>
-                        <p class="text">Kami juga menyediakan mobile app yang dapat anda download melalui tombol dibawah ini. Dengan menggunakan mobile app, anda dapat dengan mudah mengakses platform kami dan mengatur titipan anda dari mana saja dan kapan saja.</p>
-                        <ul>
-                            <li><a class="app-store" href="#"><img src="{{ asset('landing-page/main/') }}/assets/images/app-store.png" alt="store"></a></li>
-                            <li><a class="play-store" href="#"><img src="{{ asset('landing-page/main/') }}/assets/images/play-store.png" alt="store"></a></li>
-                        </ul>
-                    </div> <!-- download image -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
-
-    <!--====== DOWNLOAD PART ENDS ======-->
-
-    <!--====== PART START ======-->
-
+    <!--====== FOOTER PART START ======-->
     <footer id="footer" class="footer-area">
 
         <div class="footer-shape shape-1"></div>
