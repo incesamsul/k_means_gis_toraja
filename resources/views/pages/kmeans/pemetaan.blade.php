@@ -31,6 +31,11 @@
                                         <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
                                     </div>
                                 @endforeach
+                                <!-- Add Normal view option -->
+                                <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="normal">
+                                    <div class="legend-color" style="width: 24px; height: 16px; background-color: #808080; border-radius: 2px;"></div>
+                                    <p class="mb-0 ms-2">Normal</p>
+                                </div>
                                 <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="all">
                                     <div class="legend-color" style="width: 24px; height: 16px; background-color: #666666; border-radius: 2px;"></div>
                                     <p class="mb-0 ms-2">Show All</p>
@@ -188,6 +193,20 @@
         // Update polygon visibility and styles
         function updatePolygons() {
             polygons.forEach(({ element, data }) => {
+                // Handle normal view
+                if (activeCluster === 'normal') {
+                    element.setStyle({
+                        color: '#808080',
+                        weight: 2,
+                        fillColor: '#808080',
+                        fillOpacity: 0.5
+                    });
+                    element.unbindPopup();
+                    element.bindPopup(createPopupContent(data));
+                    return;
+                }
+
+                // Existing filtering logic
                 const matchingPoints = data.dataPoints.filter(point => {
                     const clusterMatch = activeCluster === 'all' || point.cluster === parseInt(activeCluster);
                     const hortMatch = activeHortType === 'all' || point.jenis_hortikultura === activeHortType;
