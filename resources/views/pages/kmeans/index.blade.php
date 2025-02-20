@@ -15,80 +15,39 @@
             </div>
         </div>
 
-        <!-- <div class="row mt-4">
-            {{-- Pie Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Proporsi Cluster (Pie)</strong></h4>
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            {{-- Doughnut Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Proporsi Cluster (Doughnut)</strong></h4>
-                        <canvas id="doughnutChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            {{-- Line Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Tren Nilai Rata-rata per Cluster</strong></h4>
-                        <canvas id="lineChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            {{-- Polar Area Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Distribusi Cluster (Polar Area)</strong></h4>
-                        <canvas id="polarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            {{-- Radar Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Perbandingan Metrik Cluster</strong></h4>
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            {{-- Bubble Chart --}}
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Bubble Chart Metrik</strong></h4>
-                        <canvas id="bubbleChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Stacked Bar Chart --}}
         <div class="row mt-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4><strong>Distribusi Stacked per Wilayah</strong></h4>
-                        <canvas id="stackedBarChart"></canvas>
+                        <h4><strong>Rata Rata produksi per Wilayah</strong></h4>
+                        <canvas id="averageProduksiChart"></canvas>
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4><strong>Rata Rata produktivitas</strong></h4>
+                        <canvas id="averageProduktivitasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4><strong>Rata Rata Luas lahan</strong></h4>
+                        <canvas id="averageLuasLahanChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- K-means Process Details -->
         @if (auth()->user()->role == 'Administrator')
@@ -171,17 +130,7 @@
             </div>
         </div>
         @endif
-        <!-- {{-- Chart Section --}}
-        <div class="row mt-4">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4><strong>Visualisasi Cluster per Wilayah</strong></h4>
-                        <canvas id="clusterChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+       >
 
         @foreach ($clusters as $key => $row)
             <div class="row mt-4">
@@ -334,17 +283,17 @@ var table = $('.table-data').DataTable({
                     {
                         label: 'Cluster Tinggi',
                         data: clusterData.map(d => d.cluster1),
-                        backgroundColor: '#00FF00',
+                        backgroundColor: '#98FB98', // Pale Green
                     },
                     {
                         label: 'Cluster Sedang',
                         data: clusterData.map(d => d.cluster2),
-                        backgroundColor: '#FFFF00',
+                        backgroundColor: '#FFE4B5', // Moccasin
                     },
                     {
                         label: 'Cluster Rendah',
                         data: clusterData.map(d => d.cluster3),
-                        backgroundColor: '#FF0000',
+                        backgroundColor: '#FFB6C1', // Light Pink
                     }
                 ]
             },
@@ -360,230 +309,133 @@ var table = $('.table-data').DataTable({
             }
         });
 
-        // Pie Chart
-        new Chart(document.getElementById('pieChart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ['Cluster Tinggi', 'Cluster Sedang', 'Cluster Rendah'],
-                datasets: [{
-                    data: clusterTotals,
-                    backgroundColor: ['#FF9933', '#33CC33', '#3366CC'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-
-        // Doughnut Chart
-        new Chart(document.getElementById('doughnutChart').getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Cluster Tinggi', 'Cluster Sedang', 'Cluster Rendah'],
-                datasets: [{
-                    data: clusterTotals,
-                    backgroundColor: ['#FF9933', '#33CC33', '#3366CC'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-
-        // Line Chart
-        new Chart(document.getElementById('lineChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['Luas Lahan', 'Produksi', 'Produktivitas'],
-                datasets: [
-                    {
-                        label: 'Cluster Tinggi',
-                        data: [
-                            clusterAverages[0].avgLuas,
-                            clusterAverages[0].avgProduksi,
-                            clusterAverages[0].avgProduktivitas
-                        ],
-                        borderColor: '#FF9933',
-                        fill: false
-                    },
-                    {
-                        label: 'Cluster Sedang',
-                        data: [
-                            clusterAverages[1].avgLuas,
-                            clusterAverages[1].avgProduksi,
-                            clusterAverages[1].avgProduktivitas
-                        ],
-                        borderColor: '#33CC33',
-                        fill: false
-                    },
-                    {
-                        label: 'Cluster Rendah',
-                        data: [
-                            clusterAverages[2].avgLuas,
-                            clusterAverages[2].avgProduksi,
-                            clusterAverages[2].avgProduktivitas
-                        ],
-                        borderColor: '#3366CC',
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: 'Nilai Rata-rata' }
-                    }
-                }
-            }
-        });
-
-        // Polar Area Chart
-        new Chart(document.getElementById('polarChart').getContext('2d'), {
-            type: 'polarArea',
-            data: {
-                labels: ['Cluster Tinggi', 'Cluster Sedang', 'Cluster Rendah'],
-                datasets: [{
-                    data: clusterTotals,
-                    backgroundColor: ['rgba(255, 153, 51, 0.7)', 'rgba(51, 204, 51, 0.7)', 'rgba(51, 102, 204, 0.7)'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-
-        // Radar Chart
-        new Chart(document.getElementById('radarChart').getContext('2d'), {
-            type: 'radar',
-            data: {
-                labels: ['Luas Lahan', 'Produksi', 'Produktivitas'],
-                datasets: [
-                    {
-                        label: 'Cluster Tinggi',
-                        data: [
-                            clusterAverages[0].avgLuas,
-                            clusterAverages[0].avgProduksi,
-                            clusterAverages[0].avgProduktivitas
-                        ],
-                        backgroundColor: 'rgba(255, 153, 51, 0.2)',
-                        borderColor: '#FF9933',
-                        pointBackgroundColor: '#FF9933'
-                    },
-                    {
-                        label: 'Cluster Sedang',
-                        data: [
-                            clusterAverages[1].avgLuas,
-                            clusterAverages[1].avgProduksi,
-                            clusterAverages[1].avgProduktivitas
-                        ],
-                        backgroundColor: 'rgba(51, 204, 51, 0.2)',
-                        borderColor: '#33CC33',
-                        pointBackgroundColor: '#33CC33'
-                    },
-                    {
-                        label: 'Cluster Rendah',
-                        data: [
-                            clusterAverages[2].avgLuas,
-                            clusterAverages[2].avgProduksi,
-                            clusterAverages[2].avgProduktivitas
-                        ],
-                        backgroundColor: 'rgba(51, 102, 204, 0.2)',
-                        borderColor: '#3366CC',
-                        pointBackgroundColor: '#3366CC'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: { r: { beginAtZero: true } }
-            }
-        });
-
-        // Bubble Chart
-        new Chart(document.getElementById('bubbleChart').getContext('2d'), {
-            type: 'bubble',
-            data: {
-                datasets: [
-                    {
-                        label: 'Cluster Tinggi',
-                        data: [{
-                            x: clusterAverages[0].avgLuas,
-                            y: clusterAverages[0].avgProduksi,
-                            r: clusterAverages[0].avgProduktivitas / 10
-                        }],
-                        backgroundColor: 'rgba(255, 153, 51, 0.7)'
-                    },
-                    {
-                        label: 'Cluster Sedang',
-                        data: [{
-                            x: clusterAverages[1].avgLuas,
-                            y: clusterAverages[1].avgProduksi,
-                            r: clusterAverages[1].avgProduktivitas / 10
-                        }],
-                        backgroundColor: 'rgba(51, 204, 51, 0.7)'
-                    },
-                    {
-                        label: 'Cluster Rendah',
-                        data: [{
-                            x: clusterAverages[2].avgLuas,
-                            y: clusterAverages[2].avgProduksi,
-                            r: clusterAverages[2].avgProduktivitas / 10
-                        }],
-                        backgroundColor: 'rgba(51, 102, 204, 0.7)'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Luas Lahan' }
-                    },
-                    y: {
-                        title: { display: true, text: 'Produksi' }
-                    }
-                }
-            }
-        });
-
-        // Stacked Bar Chart
-        new Chart(document.getElementById('stackedBarChart').getContext('2d'), {
+         // Bar Chart for Average Production
+         new Chart(document.getElementById('averageProduksiChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: wilayahs,
                 datasets: [
                     {
                         label: 'Cluster Tinggi',
-                        data: clusterData.map(d => d.cluster1),
-                        backgroundColor: '#FF9933',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[0]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produksi, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#90EE90', // Light Green
                     },
                     {
                         label: 'Cluster Sedang',
-                        data: clusterData.map(d => d.cluster2),
-                        backgroundColor: '#33CC33',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[1]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produksi, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#F0E68C', // Khaki
                     },
                     {
                         label: 'Cluster Rendah',
-                        data: clusterData.map(d => d.cluster3),
-                        backgroundColor: '#3366CC',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[2]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produksi, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#FFA07A', // Light Salmon
                     }
                 ]
             },
             options: {
                 responsive: true,
                 scales: {
-                    x: {
-                        title: { display: true, text: 'Wilayah' }
-                    },
+                    x: { title: { display: true, text: 'Wilayah' } },
                     y: {
-                        stacked: true,
                         beginAtZero: true,
-                        title: { display: true, text: 'Jumlah Data' }
+                        title: { display: true, text: 'Rata-rata Produksi (kw)' }
+                    }
+                }
+            }
+        });
+
+          // Bar Chart for Average Production
+          new Chart(document.getElementById('averageProduktivitasChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: wilayahs,
+                datasets: [
+                    {
+                        label: 'Cluster Tinggi',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[0]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produktivitas, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#90EE90', // Light Green
+                    },
+                    {
+                        label: 'Cluster Sedang',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[1]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produktivitas, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#EEE8AA', // Pale Goldenrod
+                    },
+                    {
+                        label: 'Cluster Rendah',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[2]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produktivitas, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#E9967A', // Dark Salmon
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Wilayah' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Rata-rata Produktivitas (kw/ha)' }
+                    }
+                }
+            }
+        });
+
+        // Bar Chart for Average Production
+        new Chart(document.getElementById('averageLuasLahanChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: wilayahs,
+                datasets: [
+                    {
+                        label: 'Cluster Tinggi',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[0]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.luas_lahan, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#8FBC8F', // Dark Sea Green
+                    },
+                    {
+                        label: 'Cluster Sedang',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[1]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produktivitas, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#EEE8AA', // Pale Goldenrod
+                    },
+                    {
+                        label: 'Cluster Rendah',
+                        data: wilayahs.map(wilayah => {
+                            const items = clusters[2]?.filter(item => item.wilayah.nama_wilayah === wilayah) || [];
+                            return items.length ? items.reduce((sum, item) => sum + item.produktivitas, 0) / items.length : 0;
+                        }),
+                        backgroundColor: '#E9967A', // Dark Salmon
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Wilayah' } },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Rata-rata Luas Lahan (ha)' }
                     }
                 }
             }
