@@ -79,7 +79,7 @@
                                 <p class="text-sm mb-0 text-capitalize font-weight-bold">Cluster</p>
                                 <h5 class="font-weight-bolder mb-0">
 
-                                    <span class="text-success text-sm font-weight-bolder">5</span>
+                                    <span class="text-success text-sm font-weight-bolder">3</span>
                                 </h5>
                             </div>
                         </div>
