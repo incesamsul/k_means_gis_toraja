@@ -96,6 +96,47 @@
                                     @endforeach
                                 </div>
 
+`                                <!-- Distance Calculations -->
+                                <div class="mb-3">
+                                    <h6>Perhitungan Jarak Euclidean:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Data Point</th>
+                                                    <th>Cluster Assignment</th>
+                                                    @foreach ($iteration['centroids'] as $index => $centroid)
+                                                        <th>Distance to C{{ $index + 1 }}</th>
+                                                    @endforeach
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($tanaman as $index => $point)
+                                                    <tr>
+                                                        <td>{{ $point->wilayah->nama_wilayah }}</td>
+                                                        @php
+                                                            $distances = [];
+                                                            foreach ($iteration['centroids'] as $centroidIndex => $centroid) {
+                                                                $dist = sqrt(
+                                                                    pow($point->luas_lahan - $centroid['luas_lahan'], 2) +
+                                                                    pow($point->produksi - $centroid['produksi'], 2) +
+                                                                    pow($point->produktivitas - $centroid['produktivitas'], 2)
+                                                                );
+                                                                $distances[] = $dist;
+                                                            }
+                                                            $minIndex = array_search(min($distances), $distances);
+                                                        @endphp
+                                                        <td>C{{ $minIndex + 1 }}</td>
+                                                        @foreach ($distances as $dist)
+                                                            <td>{{ number_format($dist, 2) }}</td>
+                                                        @endforeach
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                                 <!-- New Centroids -->
                                 <div class="mb-3">
                                     <h6>Centroid Baru:</h6>
