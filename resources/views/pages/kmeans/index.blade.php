@@ -130,18 +130,47 @@
                                                         @php
                                                             $distances = [];
                                                             foreach ($iteration['centroids'] as $centroidIndex => $centroid) {
-                                                                $dist = sqrt(
-                                                                    pow($point->luas_lahan - $centroid['luas_lahan'], 2) +
-                                                                    pow($point->produksi - $centroid['produksi'], 2) +
-                                                                    pow($point->produktivitas - $centroid['produktivitas'], 2)
-                                                                );
+                                                                // Calculate individual components
+                                                                $luasLahanDiff = pow($point->luas_lahan - $centroid['luas_lahan'], 2);
+                                                                $produksiDiff = pow($point->produksi - $centroid['produksi'], 2);
+                                                                $produktivitasDiff = pow($point->produktivitas - $centroid['produktivitas'], 2);
+                                                                
+                                                                // Calculate final distance
+                                                                $dist = sqrt($luasLahanDiff + $produksiDiff + $produktivitasDiff);
+                                                                
+                                                                // Store calculation details
+                                                                $calculationDetails = [
+                                                                    'point' => [
+                                                                        'luas_lahan' => $point->luas_lahan,
+                                                                        'produksi' => $point->produksi,
+                                                                        'produktivitas' => $point->produktivitas
+                                                                    ],
+                                                                    'centroid' => $centroid,
+                                                                    'diffs' => [
+                                                                        'luas_lahan' => $luasLahanDiff,
+                                                                        'produksi' => $produksiDiff,
+                                                                        'produktivitas' => $produktivitasDiff
+                                                                    ],
+                                                                    'final' => $dist
+                                                                ];
+                                                                $distances[$centroidIndex] = ['value' => $dist, 'details' => $calculationDetails];
                                                                 $distances[] = $dist;
                                                             }
                                                             $minIndex = array_search(min($distances), $distances);
                                                         @endphp
                                                         <td>C{{ $minIndex + 1 }}</td>
                                                         @foreach ($distances as $dist)
-                                                            <td>{{ number_format($dist, 2) }}</td>
+                                                            <td>
+                                                            <strong>{{ number_format($distances[$centroidIndex]['value'], 2) }}</strong>
+                                                            <br>
+                                                            <small class="text-muted">
+                                                                √[<br>
+                                                                ({{ number_format($distances[$centroidIndex]['details']['point']['luas_lahan'], 2) }} - {{ number_format($distances[$centroidIndex]['details']['centroid']['luas_lahan'], 2) }})² = {{ number_format($distances[$centroidIndex]['details']['diffs']['luas_lahan'], 2) }}<br>
+                                                                + ({{ number_format($distances[$centroidIndex]['details']['point']['produksi'], 2) }} - {{ number_format($distances[$centroidIndex]['details']['centroid']['produksi'], 2) }})² = {{ number_format($distances[$centroidIndex]['details']['diffs']['produksi'], 2) }}<br>
+                                                                + ({{ number_format($distances[$centroidIndex]['details']['point']['produktivitas'], 2) }} - {{ number_format($distances[$centroidIndex]['details']['centroid']['produktivitas'], 2) }})² = {{ number_format($distances[$centroidIndex]['details']['diffs']['produktivitas'], 2) }}<br>
+                                                                ]<br>
+                                                            </small>
+                                                        </td>
                                                         @endforeach
                                                     </tr>
                                                 @endforeach
