@@ -96,9 +96,22 @@
                                     @endforeach
                                 </div>
 
-`                                <!-- Distance Calculations -->
+                                <!-- Distance Calculations -->
                                 <div class="mb-3">
                                     <h6>Perhitungan Jarak Euclidean:</h6>
+                                    
+                                    <!-- Formula Explanation -->
+                                    <div class="alert alert-info mb-3">
+                                        <h6 class="mb-2">Formula Jarak Euclidean:</h6>
+                                        <p class="mb-2">d = √[(x₁-x₂)² + (y₁-y₂)² + (z₁-z₂)²]</p>
+                                        <p class="mb-0">Dimana:</p>
+                                        <ul class="mb-0">
+                                            <li>x = Luas Lahan (ha)</li>
+                                            <li>y = Produksi (kw)</li>
+                                            <li>z = Produktivitas (kw/ha)</li>
+                                        </ul>
+                                    </div>
+
                                     <div class="table-responsive">
                                         <table class="table table-sm table-bordered">
                                             <thead class="thead-light">
