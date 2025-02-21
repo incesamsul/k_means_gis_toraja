@@ -97,27 +97,36 @@
                                 </div>
 
                                 <!-- Distance Calculations -->
-                                <div class="mb-3">
-                                    <h6>Perhitungan Jarak Euclidean:</h6>
-                                    
-                                    <!-- Formula Explanation -->
-                                    <div class="alert alert-info mb-3">
-                                        <h6 class="mb-2">Formula Jarak Euclidean:</h6>
-                                        <p class="mb-2">d = √[(x₁-x₂)² + (y₁-y₂)² + (z₁-z₂)²]</p>
-                                        <p class="mb-0">Dimana:</p>
-                                        <ul class="mb-0">
-                                            <li>x = Luas Lahan (ha)</li>
-                                            <li>y = Produksi (kw)</li>
-                                            <li>z = Produktivitas (kw/ha)</li>
-                                        </ul>
+                                <div class="card shadow-sm mb-3">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0">Perhitungan Jarak Euclidean</h6>
                                     </div>
+                                    
+                                    <div class="card-body p-3">
+                                        <!-- Formula Explanation -->
+                                        <div class="alert alert-info py-2 px-3 mb-3">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <h6 class="mb-0">Formula:</h6>
+                                                <span class="badge badge-light">d = √[(x₁-x₂)² + (y₁-y₂)² + (z₁-z₂)²]</span>
+                                            </div>
+                                            <div class="row g-0">
+                                                <div class="col-auto"><small class="text-muted">Dimana:</small></div>
+                                                <div class="col ps-2">
+                                                    <div class="row g-0">
+                                                        <div class="col-auto pe-3"><small>x = Luas Lahan (ha)</small></div>
+                                                        <div class="col-auto pe-3"><small>y = Produksi (kw)</small></div>
+                                                        <div class="col-auto"><small>z = Produktivitas (kw/ha)</small></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-bordered">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Data Point</th>
-                                                    <th>Cluster Assignment</th>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered mb-0">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Data Point</th>
+                                                        <th>Cluster Assignment</th>
                                                     @foreach ($iteration['centroids'] as $index => $centroid)
                                                         <th>Distance to C{{ $index + 1 }}</th>
                                                     @endforeach
