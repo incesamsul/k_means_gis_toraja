@@ -41,9 +41,14 @@ class KmeansController extends Controller
         $k = 3; // Number of clusters
         $result = $this->kmeans($data, $k);
 
-        $data['tanaman'] = Tanaman::all();
-        $data['clusters'] = $result['clusters'];
-        $data['iterations'] = $result['iterations'];
+        // Prepare view data
+        $viewData = [
+            'data' => $data,
+            'k' => $k,
+            'tanaman' => Tanaman::all(),
+            'clusters' => $result['clusters'],
+            'iterations' => $result['iterations']
+        ];
         $data['horticulturalTypes'] = $horticulturalTypes;
         return view('pages.kmeans.pemetaan', $data);
     }
@@ -67,10 +72,15 @@ class KmeansController extends Controller
         $k = 3; // Number of clusters
         $result = $this->kmeans($data, $k);
 
-        $data['tanaman'] = Tanaman::all();
-        $data['clusters'] = $result['clusters'];
-        $data['iterations'] = $result['iterations'];
-        return view('pages.kmeans.index', $data);
+        // Prepare view data
+        $viewData = [
+            'data' => $data,
+            'k' => $k,
+            'tanaman' => Tanaman::all(),
+            'clusters' => $result['clusters'],
+            'iterations' => $result['iterations']
+        ];
+        return view('pages.kmeans.index', $viewData);
     }
 
     public function initializeCentroids($data, $k)
