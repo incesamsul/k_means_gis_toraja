@@ -75,11 +75,49 @@ class KmeansController extends Controller
 
     public function initializeCentroids($data, $k)
     {
+        // Sort data by each variable
+        $luasLahan = array_column($data, 'luas_lahan');
+        $produksi = array_column($data, 'produksi');
+        $produktivitas = array_column($data, 'produktivitas');
+        sort($luasLahan);
+        sort($produksi);
+        sort($produktivitas);
+
+        $n = count($data);
+        $segmentSize = floor($n / $k);
+
         $centroids = [];
-        $indices = array_rand($data, $k);
-        foreach ($indices as $index) {
-            $centroids[] = $data[$index];
+        // Calculate segment indices
+        $segmentIndices = [];
+        for ($i = 0; $i < $k; $i++) {
+            $startIndex = $i * $segmentSize;
+            $endIndex = ($i == $k - 1) ? $n - 1 : ($i + 1) * $segmentSize - 1;
+            $segmentIndices[] = [
+                'start' => $startIndex,
+                'end' => $endIndex,
+                'formula' => "Segment " . ($i + 1) . ": Data[" . $startIndex . "] to Data[" . $endIndex . "]"
+            ];
         }
+
+        // Calculate centroids for each cluster
+        for ($i = 0; $i < $k; $i++) {
+            $startIdx = $segmentIndices[$i]['start'];
+            $endIdx = $segmentIndices[$i]['end'];
+            $count = $endIdx - $startIdx + 1;
+
+            // Calculate average for each variable in the segment
+            $avgLuasLahan = array_sum(array_slice($luasLahan, $startIdx, $count)) / $count;
+            $avgProduksi = array_sum(array_slice($produksi, $startIdx, $count)) / $count;
+            $avgProduktivitas = array_sum(array_slice($produktivitas, $startIdx, $count)) / $count;
+
+            $centroids[] = [
+                'luas_lahan' => $avgLuasLahan,
+                'produksi' => $avgProduksi,
+                'produktivitas' => $avgProduktivitas,
+                'segment_info' => $segmentIndices[$i]
+            ];
+        }
+
         return $centroids;
     }
 
