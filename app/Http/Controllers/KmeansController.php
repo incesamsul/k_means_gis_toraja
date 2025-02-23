@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class KmeansController extends Controller
 {
+    protected $initialCentroids = [];
 
     public function pemetaan(){
         // Fetch data from the Tanaman model
@@ -157,7 +158,7 @@ class KmeansController extends Controller
     public function calculateNewCentroids($clusters)
     {
         $centroids = [];
-        foreach ($clusters as $cluster) {
+        foreach ($clusters as $index => $cluster) {
             $luasSum = 0;
             $produksiSum = 0;
             $produktifitasSum = 0;
@@ -170,7 +171,8 @@ class KmeansController extends Controller
             $centroids[] = [
                 'luas_lahan' => $luasSum / $count,
                 'produksi' => $produksiSum / $count,
-                'produktivitas' => $produktifitasSum / $count
+                'produktivitas' => $produktifitasSum / $count,
+                'segment_info' => isset($this->initialCentroids[$index]['segment_info']) ? $this->initialCentroids[$index]['segment_info'] : []
             ];
         }
         return $centroids;
@@ -179,6 +181,7 @@ class KmeansController extends Controller
     public function kmeans($data, $k, $iterations = 100)
     {
         $centroids = $this->initializeCentroids($data, $k);
+        $this->initialCentroids = $centroids;
         $iterationData = [];
         $currentCentroids = $centroids;
 
