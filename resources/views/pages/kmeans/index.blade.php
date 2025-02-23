@@ -64,6 +64,24 @@
                                 <!-- Current Centroids -->
                                 <div class="mb-3">
                                     <h6>Centroid Awal:</h6>
+                                    <div class="alert alert-info">
+                                        <h6>Perhitungan Segmen Data:</h6>
+                                        <p>Total Data (n) = {{ count($data) }}<br>
+                                        Jumlah Cluster (k) = {{ $k }}<br>
+                                        Ukuran Segmen = floor(n/k) = floor({{ count($data) }}/{{ $k }}) = {{ floor(count($data)/$k) }}</p>
+                                        
+                                        @foreach ($iteration['centroids'] as $idx => $centroid)
+                                        <div class="mb-2">
+                                            <strong>Cluster {{ $idx + 1 }}:</strong><br>
+                                            <small>
+                                                {{ $centroid['segment_info']['formula'] }}<br>
+                                                Rata-rata Luas Lahan = (Σ Luas Lahan dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['luas_lahan'], 2) }}<br>
+                                                Rata-rata Produksi = (Σ Produksi dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['produksi'], 2) }}<br>
+                                                Rata-rata Produktivitas = (Σ Produktivitas dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['produktivitas'], 2) }}
+                                            </small>
+                                        </div>
+                                        @endforeach
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-sm table-bordered">
                                             <thead class="thead-light">
