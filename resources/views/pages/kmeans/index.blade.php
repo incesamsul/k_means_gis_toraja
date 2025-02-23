@@ -181,9 +181,8 @@
                                                                     'final' => $dist
                                                                 ];
                                                                 $distances[$centroidIndex] = ['value' => $dist, 'details' => $calculationDetails];
-                                                                $distances[] = $dist;
                                                             }
-                                                            $minIndex = array_search(min($distances), $distances);
+                                                            $minIndex = array_search(min(array_column($distances, 'value')), array_column($distances, 'value'));
                                                         @endphp
                                                         <td>C{{ $minIndex + 1 }}</td>
                                                         @foreach ($distances as $index => $dist)
