@@ -73,6 +73,13 @@ class KmeansController extends Controller
         $k = 3; // Number of clusters
         $result = $this->kmeans($data, $k);
 
+        // Sort clusters by average luas_lahan (ascending: low -> medium -> high)
+        usort($result['clusters'], function($a, $b) {
+            $avgA = collect($a)->avg('luas_lahan');
+            $avgB = collect($b)->avg('luas_lahan');
+            return $avgA <=> $avgB;
+        });
+
         // Prepare view data
         $viewData = [
             'data' => $data,

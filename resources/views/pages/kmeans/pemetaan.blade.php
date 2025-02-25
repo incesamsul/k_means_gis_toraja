@@ -20,14 +20,17 @@
                                         // Determine the caption based on average luas_lahan
                                         if ($avgLuasLahan >= 700) {
                                             $caption = 'High';
+                                            $color = '00FF00';
                                         } elseif ($avgLuasLahan >= 400) {
                                             $caption = 'Medium';
+                                            $color = 'FFFF00';
                                         } else {
                                             $caption = 'Low';
+                                            $color = 'FF0000';
                                         }
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
-                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $key == 0 ? 'FFFF00' : ($key == 1 ? 'FF0000' : '00FF00') }}; border-radius: 2px;"></div>
+                                        <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $color }}; border-radius: 2px;"></div>
                                         <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
                                     </div>
                                 @endforeach
@@ -159,9 +162,10 @@
 
         // Get color for cluster
         function getClusterColor(cluster) {
-            return cluster === 1 ? '#FFFF00' :
-                   cluster === 2 ? '#FF0000' :
-                   cluster === 3 ? '#00FF00' : '#666666';
+            return cluster === 1 ? '#FF0000' : // Low - Red
+                   cluster === 2 ? '#FFFF00' : // Medium - Yellow
+                   cluster === 3 ? '#00FF00' : // High - Green
+                   '#666666';
         }
 
         // Create popup content
