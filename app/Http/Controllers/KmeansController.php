@@ -86,48 +86,41 @@ class KmeansController extends Controller
 
     public function initializeCentroids($data, $k)
     {
-        // Sort data by each variable
-        $luasLahan = array_column($data, 'luas_lahan');
-        $produksi = array_column($data, 'produksi');
-        $produktivitas = array_column($data, 'produktivitas');
-        sort($luasLahan);
-        sort($produksi);
-        sort($produktivitas);
-
         $n = count($data);
         $segmentSize = floor($n / $k);
 
+        // Sort data untuk memastikan pembagian segmen yang merata
+        usort($data, function($a, $b) {
+            return $a['luas_lahan'] <=> $b['luas_lahan'];
+        });
+
         $centroids = [];
-        // Calculate segment indices
         $segmentIndices = [];
+
+        // Menghitung indeks untuk setiap segmen
         for ($i = 0; $i < $k; $i++) {
             $startIndex = $i * $segmentSize;
             $endIndex = ($i == $k - 1) ? $n - 1 : ($i + 1) * $segmentSize - 1;
+            
+            // Memilih centroid secara acak dari dalam segmen
+            $randomIndex = rand($startIndex, $endIndex);
+            $randomPoint = $data[$randomIndex];
+
             $segmentIndices[] = [
                 'start' => $startIndex,
                 'end' => $endIndex,
-                'formula' => "Segment " . ($i + 1) . ": Data[" . $startIndex . "] to Data[" . $endIndex . "]"
+                'formula' => "Segmen " . ($i + 1) . ": Data[" . $startIndex . "] sampai Data[" . $endIndex . "]\n" .
+                           "Centroid dipilih secara acak dari indeks " . $randomIndex
             ];
-        }
-
-        // Calculate centroids for each cluster
-        for ($i = 0; $i < $k; $i++) {
-            $startIdx = $segmentIndices[$i]['start'];
-            $endIdx = $segmentIndices[$i]['end'];
-            $count = $endIdx - $startIdx + 1;
-
-            // Calculate average for each variable in the segment
-            $avgLuasLahan = array_sum(array_slice($luasLahan, $startIdx, $count)) / $count;
-            $avgProduksi = array_sum(array_slice($produksi, $startIdx, $count)) / $count;
-            $avgProduktivitas = array_sum(array_slice($produktivitas, $startIdx, $count)) / $count;
 
             $centroids[] = [
-                'luas_lahan' => $avgLuasLahan,
-                'produksi' => $avgProduksi,
-                'produktivitas' => $avgProduktivitas,
+                'luas_lahan' => $randomPoint['luas_lahan'],
+                'produksi' => $randomPoint['produksi'],
+                'produktivitas' => $randomPoint['produktivitas'],
                 'segment_info' => $segmentIndices[$i]
             ];
         }
+
 
         return $centroids;
     }
