@@ -40,14 +40,16 @@
                                         Jumlah Cluster (k) = {{ $k }}<br>
                                         Ukuran Segmen = floor(n/k) = floor({{ count($data) }}/{{ $k }}) = {{ floor(count($data)/$k) }}</p>
 
+                                        <h6 class="mt-3">Data Cluster yang Dipilih Secara Random:</h6>
                                         @foreach ($iteration['centroids'] as $idx => $centroid)
                                         <div class="mb-2">
                                             <strong>Cluster {{ $idx + 1 }}:</strong><br>
                                             <small>
-                                                {{ $centroid['segment_info']['formula'] }}<br>
-                                                Rata-rata Luas Lahan = (Σ Luas Lahan dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['luas_lahan'], 2) }}<br>
-                                                Rata-rata Produksi = (Σ Produksi dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['produksi'], 2) }}<br>
-                                                Rata-rata Produktivitas = (Σ Produktivitas dalam segmen) / {{ $centroid['segment_info']['end'] - $centroid['segment_info']['start'] + 1 }} = {{ number_format($centroid['produktivitas'], 2) }}
+                                                Segmen {{ $idx + 1 }}: Data[{{ $centroid['segment_info']['start'] }}] sampai Data[{{ $centroid['segment_info']['end'] }}]<br>
+                                                Data terpilih secara random dari indeks {{ $centroid['segment_info']['formula'] }}:<br>
+                                                - Luas Lahan: {{ number_format($centroid['luas_lahan'], 2) }} ha<br>
+                                                - Produksi: {{ number_format($centroid['produksi'], 2) }} kw<br>
+                                                - Produktivitas: {{ number_format($centroid['produktivitas'], 2) }} kw/ha
                                             </small>
                                         </div>
                                         @endforeach
