@@ -21,11 +21,15 @@
                                         if ($avgLuasLahan >= 700) {
                                             $caption = 'High';
                                             $color = '00FF00';
+                                            $clusterNumber = 3;
                                         } elseif ($avgLuasLahan >= 400) {
                                             $caption = 'Medium';
                                             $color = 'FFFF00';
+                                            $clusterNumber = 2;
                                         } else {
                                             $caption = 'Low';
+                                            $color = 'FF0000';
+                                            $clusterNumber = 1;
                                             $color = 'FF0000';
                                         }
                                     @endphp
