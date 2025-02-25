@@ -48,10 +48,10 @@ class KmeansController extends Controller
             'k' => $k,
             'tanaman' => Tanaman::all(),
             'clusters' => $result['clusters'],
-            'iterations' => $result['iterations']
+            'iterations' => $result['iterations'],
+            'horticulturalTypes' => $horticulturalTypes
         ];
-        $data['horticulturalTypes'] = $horticulturalTypes;
-        return view('pages.kmeans.pemetaan', $data);
+        return view('pages.kmeans.pemetaan', $viewData);
     }
 
     public function index()
