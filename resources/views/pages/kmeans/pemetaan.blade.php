@@ -20,17 +20,16 @@
                                         // Determine the caption based on average luas_lahan
                                         if ($avgLuasLahan >= 700) {
                                             $caption = 'High';
-                                            $color = '00FF00';
+                                            $color = '98FB98';
                                             $clusterNumber = 3;
                                         } elseif ($avgLuasLahan >= 400) {
                                             $caption = 'Medium';
-                                            $color = 'FFFF00';
+                                            $color = 'FFE4B5';
                                             $clusterNumber = 2;
                                         } else {
                                             $caption = 'Low';
-                                            $color = 'FF0000';
+                                            $color = 'FFB6C1';
                                             $clusterNumber = 1;
-                                            $color = 'FF0000';
                                         }
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
