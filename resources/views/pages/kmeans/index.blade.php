@@ -97,7 +97,7 @@
                                         <div class="alert alert-info py-2 px-3 mb-3">
                                             <div class="d-flex align-items-center justify-content-between mb-2">
                                                 <h6 class="mb-0">Formula:</h6>
-                                                <div class="d-flex">
+                                                <div class="d-flex flex-column">
                                                 <span class="badge badge-light">d = √[(x₁-x₂)² + (y₁-y₂)² + (z₁-z₂)²]</span>
                                                 <img src="{{ asset('rumus.webp') }}" alt="" width="150ss">
                                                 </div>
