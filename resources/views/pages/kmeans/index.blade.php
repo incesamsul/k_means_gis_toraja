@@ -99,7 +99,7 @@
                                                 <h6 class="mb-0">Formula:</h6>
                                                 <div class="d-flex flex-column">
 
-                                                <img class="ml-3" src="{{ asset('rumus.webp') }}" alt="" width="150ss">
+                                                <img class="ms-3 mb-3" src="{{ asset('rumus.webp') }}" alt="" width="150ss">
                                                 <span class="badge badge-light">d = √[(x₁-x₂)² + (y₁-y₂)² + (z₁-z₂)²]</span>
                                                 </div>
                                             </div>
