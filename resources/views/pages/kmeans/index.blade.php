@@ -133,10 +133,19 @@
                                                         @php
                                                             $distances = [];
                                                             foreach ($iteration['centroids'] as $centroidIndex => $centroid) {
+                                                                // Ensure numeric values with type casting
+                                                                $pointLuasLahan = floatval($point->luas_lahan);
+                                                                $pointProduksi = floatval($point->produksi);
+                                                                $pointProduktivitas = floatval($point->produktivitas);
+                                                                
+                                                                $centroidLuasLahan = floatval($centroid['luas_lahan']);
+                                                                $centroidProduksi = floatval($centroid['produksi']);
+                                                                $centroidProduktivitas = floatval($centroid['produktivitas']);
+
                                                                 // Calculate individual components
-                                                                $luasLahanDiff = pow($point->luas_lahan - $centroid['luas_lahan'], 2);
-                                                                $produksiDiff = pow($point->produksi - $centroid['produksi'], 2);
-                                                                $produktivitasDiff = pow($point->produktivitas - $centroid['produktivitas'], 2);
+                                                                $luasLahanDiff = pow($pointLuasLahan - $centroidLuasLahan, 2);
+                                                                $produksiDiff = pow($pointProduksi - $centroidProduksi, 2);
+                                                                $produktivitasDiff = pow($pointProduktivitas - $centroidProduktivitas, 2);
 
                                                                 // Calculate final distance
                                                                 $dist = sqrt($luasLahanDiff + $produksiDiff + $produktivitasDiff);
@@ -144,11 +153,15 @@
                                                                 // Store calculation details
                                                                 $calculationDetails = [
                                                                     'point' => [
-                                                                        'luas_lahan' => $point->luas_lahan,
-                                                                        'produksi' => $point->produksi,
-                                                                        'produktivitas' => $point->produktivitas
+                                                                        'luas_lahan' => $pointLuasLahan,
+                                                                        'produksi' => $pointProduksi,
+                                                                        'produktivitas' => $pointProduktivitas
                                                                     ],
-                                                                    'centroid' => $centroid,
+                                                                    'centroid' => [
+                                                                        'luas_lahan' => $centroidLuasLahan,
+                                                                        'produksi' => $centroidProduksi,
+                                                                        'produktivitas' => $centroidProduktivitas
+                                                                    ],
                                                                     'diffs' => [
                                                                         'luas_lahan' => $luasLahanDiff,
                                                                         'produksi' => $produksiDiff,
