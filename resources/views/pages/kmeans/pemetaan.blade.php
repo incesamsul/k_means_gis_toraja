@@ -14,22 +14,16 @@
                                 <h6 class="mb-3">Cluster Legend:</h6>
                                 @foreach ($clusters as $key => $cluster)
                                     @php
-                                        // Calculate average luas_lahan for the cluster
-                                        $avgLuasLahan = collect($cluster)->avg('luas_lahan');
-
-                                        // Determine the caption based on average luas_lahan
-                                        if ($avgLuasLahan >= 700) {
+                                        // Determine the caption based on cluster number instead of avgLuasLahan
+                                        if ($key + 1 == 3) {
                                             $caption = 'High';
                                             $color = '98FB98';
-                                            $clusterNumber = 3;
-                                        } elseif ($avgLuasLahan >= 400) {
+                                        } elseif ($key + 1 == 2) {
                                             $caption = 'Medium';
                                             $color = 'FFE4B5';
-                                            $clusterNumber = 2;
                                         } else {
                                             $caption = 'Low';
                                             $color = 'FFB6C1';
-                                            $clusterNumber = 1;
                                         }
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
@@ -98,8 +92,8 @@
         // Process data and create polygons
         @foreach ($clusters as $clusterIndex => $cluster)
             @php
-                $avgLuasLahan = collect($cluster)->avg('luas_lahan');
-                $level = $avgLuasLahan >= 700 ? 'High' : ($avgLuasLahan >= 400 ? 'Medium' : 'Low');
+                // Assign level based on cluster number
+                $level = $clusterIndex + 1 == 3 ? 'High' : ($clusterIndex + 1 == 2 ? 'Medium' : 'Low');
             @endphp
 
             @foreach ($cluster as $data)
@@ -165,10 +159,12 @@
 
         // Get color for cluster
         function getClusterColor(cluster) {
-            return cluster === 1 ? '#FF0000' : // Low - Red
-                   cluster === 2 ? '#FFFF00' : // Medium - Yellow
-                   cluster === 3 ? '#00FF00' : // High - Green
-                   '#666666';
+            switch(cluster) {
+                case 1: return '#FFB6C1'; // Low - Light Pink
+                case 2: return '#FFE4B5'; // Medium - Moccasin
+                case 3: return '#98FB98'; // High - Pale Green
+                default: return '#666666';
+            }
         }
 
         // Create popup content
