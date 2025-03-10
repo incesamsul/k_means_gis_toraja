@@ -137,7 +137,7 @@
                                                                 $pointLuasLahan = floatval($point->luas_lahan);
                                                                 $pointProduksi = floatval($point->produksi);
                                                                 $pointProduktivitas = floatval($point->produktivitas);
-                                                                
+
                                                                 $centroidLuasLahan = floatval($centroid['luas_lahan']);
                                                                 $centroidProduksi = floatval($centroid['produksi']);
                                                                 $centroidProduktivitas = floatval($centroid['produktivitas']);
@@ -178,13 +178,13 @@
                                                             <td>
                                                             <strong>{{ number_format($dist['value'], 2) }}</strong>
                                                             <br>
-                                                            <small class="text-muted">
+                                                            <!-- <small class="text-muted">
                                                                 √[<br>
                                                                 ({{ number_format($dist['details']['point']['luas_lahan'], 2) }} - {{ number_format($dist['details']['centroid']['luas_lahan'], 2) }})² = {{ number_format($dist['details']['diffs']['luas_lahan'], 2) }}<br>
                                                                 + ({{ number_format($dist['details']['point']['produksi'], 2) }} - {{ number_format($dist['details']['centroid']['produksi'], 2) }})² = {{ number_format($dist['details']['diffs']['produksi'], 2) }}<br>
                                                                 + ({{ number_format($dist['details']['point']['produktivitas'], 2) }} - {{ number_format($dist['details']['centroid']['produktivitas'], 2) }})² = {{ number_format($dist['details']['diffs']['produktivitas'], 2) }}<br>
                                                                 ]<br>
-                                                            </small>
+                                                            </small> -->
                                                         </td>
                                                         @endforeach
                                                     </tr>

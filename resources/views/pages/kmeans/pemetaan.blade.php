@@ -25,10 +25,12 @@
                                             $caption = 'Low';
                                             $color = 'FFB6C1';
                                         }
+                                        // Count the number of data points in this cluster
+                                        $count = count($cluster);
                                     @endphp
                                     <div class="d-flex align-items-center mb-2 legend-item" style="cursor: pointer;" data-cluster="{{ $key + 1 }}">
                                         <div class="legend-color" style="width: 24px; height: 16px; background-color: #{{ $color }}; border-radius: 2px;"></div>
-                                        <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }}</p>
+                                        <p class="mb-0 ms-2">Cluster {{ $key + 1 }} - {{ $caption }} ({{ $count }} data)</p>
                                     </div>
                                 @endforeach
                                 <!-- Add Normal view option -->
