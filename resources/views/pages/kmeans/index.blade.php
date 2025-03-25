@@ -118,24 +118,15 @@
                                         <div class="table-responsive">
                                             <table class="table table-sm table-bordered mb-0">
                                                 <thead class="thead-light">
-                                                    <tr>
-                                                        <th rowspan="2">Data Point</th>
-                                                        <th colspan="3">Data Values</th>
-                                                        <th rowspan="2">Cluster Assignment</th>
-                                                        @foreach ($iteration['centroids'] as $index => $centroid)
-                                                            <th colspan="4">Cluster {{ $index + 1 }}</th>
-                                                        @endforeach
-                                                    </tr>
-                                                    <tr>
+f                                                    <tr>
+                                                        <th>Data Point</th>
                                                         <th>x (ha)</th>
                                                         <th>y (kw)</th>
                                                         <th>z (kw/ha)</th>
-                                                        @foreach ($iteration['centroids'] as $index => $centroid)
-                                                            <th>x (ha)</th>
-                                                            <th>y (kw)</th>
-                                                            <th>z (kw/ha)</th>
-                                                            <th>Distance</th>
-                                                        @endforeach
+                                                        <th>Distance to C1</th>
+                                                        <th>Distance to C2</th>
+                                                        <th>Distance to C3</th>
+                                                        <th>Assigned Cluster</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -188,13 +179,10 @@
                                                                 }
                                                                 $minIndex = array_search(min(array_column($distances, 'value')), array_column($distances, 'value'));
                                                             @endphp
-                                                            <td>C{{ $minIndex + 1 }}</td>
-                                                            @foreach ($distances as $index => $dist)
-                                                                <td>{{ number_format(floatval($dist['details']['centroid']['luas_lahan']), 2) }}</td>
-                                                                <td>{{ number_format(floatval($dist['details']['centroid']['produksi']), 2) }}</td>
-                                                                <td>{{ number_format(floatval($dist['details']['centroid']['produktivitas']), 2) }}</td>
+                                                            @foreach ($distances as $dist)
                                                                 <td><strong>{{ number_format(floatval($dist['value']), 2) }}</strong></td>
                                                             @endforeach
+                                                            <td>C{{ $minIndex + 1 }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
