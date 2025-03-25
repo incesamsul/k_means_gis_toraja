@@ -40,7 +40,7 @@
                                             <p>Total Data (n) = {{ count($data) }}<br>
                                             Jumlah Cluster (k) = {{ $k }}<br>
                                             Ukuran Segmen = floor(n/k) = floor({{ count($data) }}/{{ $k }}) = {{ floor(count($data)/$k) }}</p>
-                                        
+
                                             <h6 class="mt-3">Data Cluster yang Dipilih Secara Random:</h6>
                                             @foreach ($iteration['centroids'] as $idx => $centroid)
                                             <div class="mb-2">
@@ -120,7 +120,7 @@
                                         <div class="table-responsive">
                                             <table class="table table-sm table-bordered mb-0">
                                                 <thead class="thead-light">
-f                                                    <tr>
+                                                   <tr>
                                                         <th>Data Point</th>
                                                         <th>x (ha)</th>
                                                         <th>y (kw)</th>
