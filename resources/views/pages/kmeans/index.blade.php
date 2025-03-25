@@ -142,9 +142,9 @@
                                                     @foreach ($tanaman as $index => $point)
                                                         <tr>
                                                             <td>{{ $point->wilayah->nama_wilayah }}</td>
-                                                            <td>{{ number_format($point->luas_lahan, 2) }}</td>
-                                                            <td>{{ number_format($point->produksi, 2) }}</td>
-                                                            <td>{{ number_format($point->produktivitas, 2) }}</td>
+                                                            <td>{{ number_format(floatval($point->luas_lahan), 2) }}</td>
+                                                            <td>{{ number_format(floatval($point->produksi), 2) }}</td>
+                                                            <td>{{ number_format(floatval($point->produktivitas), 2) }}</td>
                                                             @php
                                                                 $distances = [];
                                                                 foreach ($iteration['centroids'] as $centroidIndex => $centroid) {
@@ -190,10 +190,10 @@
                                                             @endphp
                                                             <td>C{{ $minIndex + 1 }}</td>
                                                             @foreach ($distances as $index => $dist)
-                                                                <td>{{ number_format($dist['details']['centroid']['luas_lahan'], 2) }}</td>
-                                                                <td>{{ number_format($dist['details']['centroid']['produksi'], 2) }}</td>
-                                                                <td>{{ number_format($dist['details']['centroid']['produktivitas'], 2) }}</td>
-                                                                <td><strong>{{ number_format($dist['value'], 2) }}</strong></td>
+                                                                <td>{{ number_format(floatval($dist['details']['centroid']['luas_lahan']), 2) }}</td>
+                                                                <td>{{ number_format(floatval($dist['details']['centroid']['produksi']), 2) }}</td>
+                                                                <td>{{ number_format(floatval($dist['details']['centroid']['produktivitas']), 2) }}</td>
+                                                                <td><strong>{{ number_format(floatval($dist['value']), 2) }}</strong></td>
                                                             @endforeach
                                                         </tr>
                                                     @endforeach
